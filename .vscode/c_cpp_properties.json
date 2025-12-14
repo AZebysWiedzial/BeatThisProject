@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/headers",
+                "${workspaceFolder}/SDL2-2.0.10/include",
+                "/usr/include",
+                "/usr/local/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/headers",
+                    "${workspaceFolder}/SDL2-2.0.10/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
