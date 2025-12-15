@@ -5,6 +5,11 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
+#define BACKGROUND_SPRITE_WIDTH 1280
+#define BACKGROUND_SPRITE_HEIGHT 480
+
+#define PLAYER_X_TO_MOVE_CAMERA 150
+
 #define RESULT_SUCCESS 0
 #define RESULT_ERROR 1
 
@@ -25,6 +30,7 @@ class Game {
     Renderable *background;
     UI* uiManager;
     Player *player;
+    SDL_Rect camera;
 
     void render();
 };

@@ -5,7 +5,9 @@
 class Player : public GameEntity
 {
     public:
-        Player(SDL_Renderer* renderer, double x, double y, int spriteWidth, int spriteHeight);
-        void move() override;
+        Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
+        void move(double deltaTime) override;
         void handleEvents(SDL_Event& event) override;
+        int getX();
+        int getY();
 };

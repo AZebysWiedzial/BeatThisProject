@@ -19,6 +19,7 @@ Game::Game()
     renderer = nullptr;
     // scrtex = nullptr;
     background = nullptr;
+    
 }
 
 int Game::init()
@@ -43,11 +44,12 @@ int Game::init()
         printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
         return RESULT_ERROR;
     }
+    camera = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     uiManager = new UI(renderer);
     uiManager->initUI();
-    player = new Player(renderer, 0, 0, 30, 30);
+    player = new Player(renderer, &camera, 0, 0, 30, 30, 30, 30);
 
-    background = new Renderable(renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    background = new Renderable(renderer, &camera, 0, 0, BACKGROUND_SPRITE_WIDTH, BACKGROUND_SPRITE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
     if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
@@ -62,18 +64,10 @@ int Game::init()
 
     SDL_SetWindowTitle(window, "Beat This Project");
 
-
-    // screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
-                                    // 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-
-    //create a blue surface
-
     // scrtex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     SDL_ShowCursor(SDL_DISABLE);
 
-    // wczytanie obrazka cs8x8.bmp
-    // charset = SDL_LoadBMP("./cs8x8.bmp");
 
     // if(charset == NULL) {
     //     printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
@@ -139,10 +133,20 @@ int Game::gameLoop()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
-    background->render();
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    player->move();
+    player->move(delta);
+    
+    if(player->getX() - camera.x < PLAYER_X_TO_MOVE_CAMERA) camera.x = player->getX() - PLAYER_X_TO_MOVE_CAMERA;
+    else if(player->getX() - camera.x > SCREEN_WIDTH - PLAYER_X_TO_MOVE_CAMERA) camera.x = player->getX() - (SCREEN_WIDTH - PLAYER_X_TO_MOVE_CAMERA);
+    
+    if(camera.x < 0) camera.x = 0;
+    else if(camera.x > BACKGROUND_SPRITE_WIDTH - camera.w) camera.x = BACKGROUND_SPRITE_WIDTH - camera.w;
+    
+    printf("Camera x: %d\n", camera.x);
+
+    background->render();
+
     player->render();
 
     uiManager->render();

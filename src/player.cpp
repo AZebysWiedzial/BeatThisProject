@@ -7,7 +7,7 @@
 #define KEY_RIGHT SDLK_RIGHT
 
 
-Player::Player(SDL_Renderer* renderer, double x, double y, int spriteWidth, int spriteHeight) : GameEntity(renderer, x, y, spriteWidth, spriteHeight)
+Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : GameEntity(renderer, camera, x, y, spriteWidth, spriteHeight, objectWidth, objectHeight)
 {
     speed = PLAYER_SPEED;
 
@@ -16,18 +16,16 @@ Player::Player(SDL_Renderer* renderer, double x, double y, int spriteWidth, int 
     SDL_FillRect(sprite, NULL, SDL_MapRGB(sprite->format, 0xFF, 0x00, 0x00));
     texture = SDL_CreateTextureFromSurface(renderer, sprite);
 }
-void Player::move()
+void Player::move(double deltaTime)
 {
-    double dx = speed * dirX;
-    double dy = speed * dirY;
+    double dx = speed * dirX * deltaTime;
+    double dy = speed * dirY * deltaTime;
 
     normalizeVector(&dx, &dy);
 
-    x += (dx/2);
-    y += (dy/4);
-    
-    
-    
+    x += dx;
+    y += dy;
+
 }
 void Player::handleEvents(SDL_Event& event)
 {
@@ -47,4 +45,12 @@ void Player::handleEvents(SDL_Event& event)
             break;
         }
         
+}
+int Player::getX()
+{
+    return x;
+}
+int Player::getY()
+{
+    return y;
 }

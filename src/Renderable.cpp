@@ -1,12 +1,15 @@
 #include "Renderable.h"
 
-Renderable::Renderable(SDL_Renderer* renderer, double x, double y, int spriteWidth, int spriteHeight)
+Renderable::Renderable(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight)
 {
     this->renderer = renderer;
+    this->camera = camera;
     this->x = x;
     this->y = y;
     this->spriteWidth = spriteWidth;
     this->spriteHeight = spriteHeight;
+    this->objectWidth = objectWidth;
+    this->objectHeight = objectHeight;
 
     srcRect.x = 0;
     srcRect.y = 0;
@@ -33,6 +36,8 @@ void Renderable::updateDestRect()
         default:
             break;
     }
+    destRect.x -= camera->x;
+    destRect.y -= camera->y;
 }
 
 void Renderable::render()
