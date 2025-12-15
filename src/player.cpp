@@ -11,11 +11,6 @@ Player::Player(SDL_Renderer* renderer, double x, double y, int spriteWidth, int 
 {
     speed = PLAYER_SPEED;
 
-    destRect.x = x;
-    destRect.y = y;
-    destRect.w = spriteWidth;
-    destRect.h = spriteHeight;
-    
     sprite = SDL_CreateRGBSurface(0, spriteWidth, spriteWidth, 32,
                                 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
     SDL_FillRect(sprite, NULL, SDL_MapRGB(sprite->format, 0xFF, 0x00, 0x00));
@@ -30,10 +25,8 @@ void Player::move()
 
     x += (dx/2);
     y += (dy/4);
-    destRect.x = x;
-    destRect.y = y;
-    destRect.w = spriteWidth;
-    destRect.h = spriteHeight;
+    
+    
     
 }
 void Player::handleEvents(SDL_Event& event)

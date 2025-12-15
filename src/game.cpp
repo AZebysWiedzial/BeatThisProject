@@ -18,8 +18,7 @@ Game::Game()
     window = nullptr;
     renderer = nullptr;
     // scrtex = nullptr;
-    backgroundSprite = nullptr;
-    backgroundTexture = nullptr;
+    background = nullptr;
 }
 
 int Game::init()
@@ -48,21 +47,20 @@ int Game::init()
     uiManager->initUI();
     player = new Player(renderer, 0, 0, 30, 30);
 
-    backgroundSprite = SDL_LoadBMP("../assets/background.bmp");
-    if(backgroundSprite == NULL) 
+    background = new Renderable(renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
         cleanUp();
         return RESULT_ERROR;
     }
-    backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSprite);
 
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-    SDL_SetWindowTitle(window, "Szablon do zdania drugiego 2017");
+    SDL_SetWindowTitle(window, "Beat This Project");
 
 
     // screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
@@ -138,18 +136,16 @@ int Game::gameLoop()
             }
         }
 
-    SDL_Rect backgroundSrcRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-    SDL_Rect backgroundDestRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, backgroundTexture, &backgroundSrcRect, &backgroundDestRect);
+    background->render();
 
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     player->move();
     player->render();
 
-    uiManager->Render();
+    uiManager->render();
 
     SDL_RenderPresent(renderer);
 

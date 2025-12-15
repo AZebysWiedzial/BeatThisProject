@@ -21,11 +21,12 @@ void UI::initUI()
     actionBar.w = 10;
     actionBar.h = 10;
 }
-void UI::Render()
+void UI::render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-
     SDL_RenderFillRect(renderer, &playerHpBar);
+
+    
     SDL_RenderFillRect(renderer, &actionBar);
     SDL_RenderFillRect(renderer, &timeFpsBar);
 }

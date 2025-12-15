@@ -7,7 +7,7 @@ class UI
     public:
     UI(SDL_Renderer* renderer);
     void initUI();
-    void Render();
+    void render();
 
     private:
     SDL_Rect playerHpBar;
