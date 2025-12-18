@@ -18,6 +18,8 @@ Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int
 }
 void Player::move(double deltaTime)
 {
+    GameEntity::move(deltaTime);
+    
     double dx = speed * dirX * deltaTime;
     double dy = speed * dirY * deltaTime;
 
@@ -26,6 +28,8 @@ void Player::move(double deltaTime)
     x += dx;
     y += dy;
 
+    collider.x = (int)(x - (collider.w / 2));
+    collider.y = (int)(y - collider.h);
 }
 void Player::handleEvents(SDL_Event& event)
 {

@@ -10,7 +10,8 @@ Game::Game()
     frames = 0;
     fpsTimer = 0;
     fps = 0;
-    quit = 0;
+    quit = false;
+    newGame = false;
     worldTime = 0;
     etiSpeed = 1;
     // screen = nullptr;
@@ -45,11 +46,12 @@ int Game::init()
         return RESULT_ERROR;
     }
     camera = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    floor = {0, SCREEN_HEIGHT - FLOOR_HEIGHT, BACKGROUND_SPRITE_WIDTH, FLOOR_HEIGHT};
     uiManager = new UI(renderer);
     uiManager->initUI();
-    player = new Player(renderer, &camera, 0, 0, 30, 30, 30, 30);
+    player = new Player(renderer, &camera, 50, SCREEN_HEIGHT - 20, 30, 30, 30, 30);
 
-    background = new Renderable(renderer, &camera, 0, 0, BACKGROUND_SPRITE_WIDTH, BACKGROUND_SPRITE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+    background = new Renderable(renderer, &camera, 0, 0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
     if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
@@ -88,12 +90,9 @@ int Game::gameLoop()
 
     t1 = SDL_GetTicks();
 
-    while(!quit) {
+    while(!(quit || newGame)) {
     t2 = SDL_GetTicks();
 
-    // w tym momencie t2-t1 to czas w milisekundach,
-    // jaki uplyna� od ostatniego narysowania ekranu
-    // delta to ten sam czas w sekundach
     // here t2-t1 is the time in milliseconds since
     // the last screen was drawn
     // delta is the same time in seconds
@@ -125,9 +124,13 @@ int Game::gameLoop()
 
         switch(event.type) {
             case SDL_QUIT:
-                quit = 1;
+                quit = true;
+                break;
+            case SDL_KEYDOWN:
+                if(event.key.keysym.sym == 'n') newGame = true;
                 break;
             }
+            
         }
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -136,7 +139,22 @@ int Game::gameLoop()
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     player->move(delta);
+
+    player->handleCollisions(&floor);
     
+    render();
+
+    SDL_RenderPresent(renderer);
+
+    
+    
+    frames++;
+    }
+    if(quit) return RESULT_QUIT;
+    else if (newGame) return RESULT_NEW_GAME;
+}
+void Game::render()
+{
     if(player->getX() - camera.x < PLAYER_X_TO_MOVE_CAMERA) camera.x = player->getX() - PLAYER_X_TO_MOVE_CAMERA;
     else if(player->getX() - camera.x > SCREEN_WIDTH - PLAYER_X_TO_MOVE_CAMERA) camera.x = player->getX() - (SCREEN_WIDTH - PLAYER_X_TO_MOVE_CAMERA);
     
@@ -150,18 +168,6 @@ int Game::gameLoop()
     player->render();
 
     uiManager->render();
-
-    SDL_RenderPresent(renderer);
-
-    // obs�uga zdarze� (o ile jakie� zasz�y) / handling of events (if there were any)
-    
-    frames++;
-    }
-    return RESULT_SUCCESS;
-}
-void Game::render()
-{
-
 }
 void Game::cleanUp()
 {

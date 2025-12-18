@@ -6,12 +6,16 @@
 #define SCREEN_HEIGHT 480
 
 #define BACKGROUND_SPRITE_WIDTH 1280
-#define BACKGROUND_SPRITE_HEIGHT 480
+
+#define FLOOR_HEIGHT 80
 
 #define PLAYER_X_TO_MOVE_CAMERA 150
 
 #define RESULT_SUCCESS 0
 #define RESULT_ERROR 1
+
+#define RESULT_QUIT 0
+#define RESULT_NEW_GAME 1
 
 class Game {
     public:
@@ -21,7 +25,8 @@ class Game {
     void cleanUp();
 
     private:
-    int t1, t2, quit, frames, rc;
+    int t1, t2, frames, rc;
+    bool quit, newGame;
 	double delta, worldTime, fpsTimer, fps, distance, etiSpeed;
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
@@ -30,7 +35,7 @@ class Game {
     Renderable *background;
     UI* uiManager;
     Player *player;
-    SDL_Rect camera;
+    SDL_Rect camera, floor;
 
     void render();
 };

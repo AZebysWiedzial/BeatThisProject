@@ -5,7 +5,7 @@ class Renderable
     
     public:
     Renderable(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
-    void render();
+    virtual void render();
     void updateDestRect();
     int setSprite(const char* filePath);
 

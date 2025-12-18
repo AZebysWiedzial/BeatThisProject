@@ -19,8 +19,11 @@ int main(int argc, char **argv)
 	if(result == RESULT_SUCCESS) printf("SUCCESS!\n");
 	else printf("FAILED\n");
 	
-
-	game.gameLoop();
+	int loopResult = game.gameLoop();
+	while(loopResult != RESULT_QUIT)
+	{
+		printf("uwu");
+	}
 
 	game.cleanUp();
 	
