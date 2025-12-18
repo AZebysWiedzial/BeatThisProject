@@ -38,4 +38,5 @@ class Game {
     SDL_Rect camera, floor;
 
     void render();
+    void reset();
 };

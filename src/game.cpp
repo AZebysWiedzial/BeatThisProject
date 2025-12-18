@@ -82,11 +82,14 @@ int Game::init()
     return RESULT_SUCCESS;
 }
 
-
+void Game::reset()
+{
+    
+}
 
 int Game::gameLoop()
 {
-    char text[128];
+    // char text[128];
 
     t1 = SDL_GetTicks();
 
@@ -150,8 +153,11 @@ int Game::gameLoop()
     
     frames++;
     }
+
     if(quit) return RESULT_QUIT;
     else if (newGame) return RESULT_NEW_GAME;
+    
+    return RESULT_SUCCESS;
 }
 void Game::render()
 {

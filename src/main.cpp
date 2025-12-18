@@ -15,15 +15,22 @@ int main(int argc, char **argv)
 {
 	Game game;
 
-	int result = game.init();
-	if(result == RESULT_SUCCESS) printf("SUCCESS!\n");
-	else printf("FAILED\n");
-	
-	int loopResult = game.gameLoop();
-	while(loopResult != RESULT_QUIT)
+	int initResult, loopResult;
+
+
+	initResult = game.init();
+	if(initResult == RESULT_SUCCESS) printf("SUCCESS!\n");
+	else 
 	{
-		printf("uwu");
+		printf("FAILED\n");
 	}
+
+	
+	do
+	{
+		
+		loopResult = game.gameLoop();
+	} while (loopResult != RESULT_QUIT);
 
 	game.cleanUp();
 	
