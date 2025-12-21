@@ -1,4 +1,8 @@
+#ifndef UI_H
+#define UI_H
 #include<SDL.h>
+#include "LinkedList.h"
+#include "Renderable.h"
 
 #define PLAYER_HP_BAR_LENGTH 40
 
@@ -8,11 +12,13 @@ class UI
     UI(SDL_Renderer* renderer);
     void initUI();
     void render();
+    void add(Renderable* element);
 
     private:
-    SDL_Rect playerHpBar;
-    SDL_Rect actionBar;
-    SDL_Rect timeFpsBar;
+    char textBuffer[128];
+    
     SDL_Renderer* renderer;
-    SDL_Texture* texture;
+    SDL_Surface* charset;
+    LinkedList<Renderable*> uiElements;
 };
+#endif

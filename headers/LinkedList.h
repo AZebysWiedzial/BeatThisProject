@@ -1,8 +1,97 @@
-class LinkedList
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
+#include <cstdarg>
+
+template <typename T> class LinkedList
 {
+    struct Node
+    {
+        Node()
+        {
+            next = nullptr;
+        }
+        Node(T value)
+        {
+            this->value = value;
+            next = nullptr;
+        }
+        
+        T value;
+        Node* next;
+    };
     public:
     LinkedList();
+    ~LinkedList();
+    void add(T val);
+    // template <typename... Args>
+    // void addAll(Args&... vals);
+    void removeAfter(Node* node);
+    template <typename Function>
+    void forEach(Function func);
+    void sort(int(*compare)(T, T));
 
     private:
-    
+    Node* head;
+    Node* tail;
 };
+
+template <typename T>
+LinkedList<T>::LinkedList()
+{
+    head = new Node();
+    tail = head;
+}
+
+template <typename T>
+LinkedList<T>::~LinkedList()
+{
+    while(head->next != nullptr)
+    {
+        removeAfter(head);
+    }
+    delete head;
+}
+
+template <typename T>
+void LinkedList<T>::add(T val)
+{
+    Node* newNode = new Node(val);
+    
+    tail->next = newNode;
+    tail = newNode;
+}
+
+// template <typename T>
+// template <typename... Args>
+// void LinkedList<T>::addAll(Args&... vals)
+// {
+    
+// }
+
+template <typename T>
+void LinkedList<T>::removeAfter(Node* prev)
+{
+    Node* nodeToRemove = prev->next;
+    prev->next = nodeToRemove->next;
+    delete nodeToRemove;
+}
+
+template <typename T>
+template <typename Function>
+void LinkedList<T>::forEach(Function func)
+{
+    Node* currNode = head->next;
+    while(currNode != nullptr)
+    {
+        func(currNode->value);
+        currNode = currNode->next;
+    }
+}
+// template <typename T>
+// void LinkedList<T>::getFirstElement()
+// {
+//     return head->next;
+// }
+
+#endif

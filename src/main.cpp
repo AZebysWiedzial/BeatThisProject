@@ -3,18 +3,12 @@
 #include<stdio.h>
 #include<string.h>
 
-#include "game.h"
-
-extern "C" {
-#include"../SDL2-2.0.10/include/SDL.h"
-#include"../SDL2-2.0.10/include/SDL_main.h"
-}
+#include "Game.h"
 
 // main
 int main(int argc, char **argv) 
 {
 	Game game;
-
 	int initResult, loopResult;
 
 
@@ -25,12 +19,8 @@ int main(int argc, char **argv)
 		printf("FAILED\n");
 	}
 
+	loopResult = game.gameLoop();
 	
-	do
-	{
-		
-		loopResult = game.gameLoop();
-	} while (loopResult != RESULT_QUIT);
 
 	game.cleanUp();
 	

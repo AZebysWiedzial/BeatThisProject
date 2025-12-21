@@ -1,32 +1,30 @@
 #include "UI.h"
+#include "graphics.h"
+#include<stdio.h>
 
 UI::UI(SDL_Renderer* renderer)
 {
     this->renderer = renderer;
+    charset = nullptr;
 }
 void UI::initUI()
 {
-    playerHpBar.x = 10;
-    playerHpBar.y = 10;
-    playerHpBar.w = 10;
-    playerHpBar.h = 10;
-
-    timeFpsBar.x = 20;
-    timeFpsBar.y = 20;
-    timeFpsBar.w = 10;
-    timeFpsBar.h = 10;
-
-    actionBar.x = 30;
-    actionBar.y = 30;
-    actionBar.w = 10;
-    actionBar.h = 10;
+    charset = SDL_LoadBMP("../assets/cs8x8.bmp");
+    if(charset == NULL) {
+		printf("SDL_LoadBMP(cs8x8.bmp) error: %s\n", SDL_GetError());
+		}
+    else printf("Charset loaded!\n");
+	SDL_SetColorKey(charset, true, SDL_MapRGB(charset->format, 0, 0, 0));
+	
+	// SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)
 }
 void UI::render()
 {
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderFillRect(renderer, &playerHpBar);
-
-    
-    SDL_RenderFillRect(renderer, &actionBar);
-    SDL_RenderFillRect(renderer, &timeFpsBar);
+    uiElements.forEach([](Renderable* element){
+        element->render();
+    });
+}
+void UI::add(Renderable* element)
+{
+    uiElements.add(element);
 }
