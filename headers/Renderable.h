@@ -6,7 +6,15 @@
 
 class Renderable
 {
-    
+    protected:
+    enum RenderAnchor
+    {
+        CENTER,
+        TOP_RIGHT,
+        BOTTOM_CENTER
+    };
+
+
     public:
     Renderable();
     Renderable(SDL_Renderer* renderer, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
@@ -21,15 +29,13 @@ class Renderable
     void setX(double newX);
     void setY(double newY);
     void setPosition(double newX, double newY);
+    void setAnchor(RenderAnchor newAnchor);
+    void setObjectWidth(int newWidth);
+    void setSpriteWidth(int newWidth);
+
 
 
     protected:
-    enum RenderAnchor
-    {
-        CENTER,
-        TOP_RIGHT,
-        BOTTOM_CENTER
-    };
     RenderAnchor anchor;
 
     double x;

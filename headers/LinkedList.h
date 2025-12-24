@@ -29,6 +29,8 @@ template <typename T> class LinkedList
     void removeAfter(Node* node);
     template <typename Function>
     void forEach(Function func);
+    template <typename Function>
+    void forEachAndRemoveIf(Function func);
     void sort(int(*compare)(T, T));
 
     private:
@@ -81,11 +83,23 @@ template <typename T>
 template <typename Function>
 void LinkedList<T>::forEach(Function func)
 {
-    Node* currNode = head->next;
-    while(currNode != nullptr)
+    Node* currNode = head;
+    while(currNode->next != nullptr)
     {
-        func(currNode->value);
+        func(currNode->next->value);
         currNode = currNode->next;
+    }
+}
+
+template <typename T>
+template <typename Function>
+void LinkedList<T>::forEachAndRemoveIf(Function func)
+{
+    Node* currNode = head;
+    while(currNode->next != nullptr)
+    {
+        if(func(currNode->next->value)) removeAfter(currNode);
+        else currNode = currNode->next;
     }
 }
 // template <typename T>

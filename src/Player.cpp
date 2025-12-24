@@ -1,43 +1,54 @@
 #include "Player.h"
 #include "mathFuncs.h"
-
-#define KEY_UP SDLK_UP
-#define KEY_DOWN SDLK_DOWN
-#define KEY_LEFT SDLK_LEFT
-#define KEY_RIGHT SDLK_RIGHT
+#include <stdio.h>
 
 
-Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : GameEntity(renderer, camera, x, y, spriteWidth, spriteHeight, objectWidth, objectHeight)
+
+
+Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : GameEntity(renderer, camera, x, y, hp, spriteWidth, spriteHeight, objectWidth, objectHeight)
 {
     speed = PLAYER_SPEED;
 
-    sprite = SDL_CreateRGBSurface(0, spriteWidth, spriteWidth, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-    SDL_FillRect(sprite, NULL, SDL_MapRGB(sprite->format, 0xFF, 0x00, 0x00));
-    texture = SDL_CreateTextureFromSurface(renderer, sprite);
+    lightAttack = new Attack(10, 100, 30, 500, 250);
+    heavyAttack = new Attack(30, 100, 50, 1000, 500);
+
+    setRectangleAsSprite(255, 0, 0);
 }
 void Player::move(double deltaTime)
 {
     GameEntity::move(deltaTime);
     
-    double dx = speed * dirX * deltaTime;
-    double dy = speed * dirY * deltaTime;
+    double dx = dirX;
+    double dy = dirY;
 
     normalizeVector(&dx, &dy);
 
-    x += dx;
-    y += dy;
+    x += dx * speed * deltaTime;
+    y += dy * speed * deltaTime;
 
     collider.x = (int)(x - (collider.w / 2));
     collider.y = (int)(y - collider.h);
+
+    // printf("Player position: x - %f y - %f\n", x, y);
 }
-void Player::handleEvents(SDL_Event& event)
+void Player::handleInput(SDL_Event& event)
 {
     switch(event.type) {
         case SDL_KEYDOWN:
-            if(event.key.keysym.sym == KEY_RIGHT) dirX = 1;
-            else if(event.key.keysym.sym == KEY_LEFT) dirX = -1;
+            if(event.key.keysym.sym == KEY_RIGHT) 
+            {
+                dirX = 1;
+                facingDirection = RIGHT;
+            }
+            else if(event.key.keysym.sym == KEY_LEFT) 
+            {
+                dirX = -1;
+                facingDirection = LEFT;
+            }
             else if(event.key.keysym.sym == KEY_DOWN) dirY = 1;
             else if(event.key.keysym.sym == KEY_UP) dirY = -1;
+            else if(!isAttacking && event.key.keysym.sym == KEY_LIGHT_ATTACK) startAttacking(lightAttack);
+            else if(!isAttacking && event.key.keysym.sym == KEY_HEAVY_ATTACK) startAttacking(heavyAttack);
             break;
 
         case SDL_KEYUP:
@@ -47,4 +58,57 @@ void Player::handleEvents(SDL_Event& event)
             else if(dirY == -1 && event.key.keysym.sym == KEY_UP) dirY = 0;
             break;
         }
+}
+
+void Player::startAttacking(Attack* attack)
+{
+    currAttack = attack;
+
+    attackTimer = currAttack->getAnimationDurationMs();
+    isAttacking = true;
+    hasAttacked = false;
+
+}
+Attack* Player::attack()
+{
+    return currAttack;
+}
+void Player::finishAttacking()
+{
+    currAttack = nullptr;
+    isAttacking = false;
+    attackTimer = 0;
+}
+void Player::handleAttacking(double deltaTime)
+{
+    if(!isAttacking) return;
+    
+    attackTimer -= deltaTime;
+    if(attackTimer <= 0)
+    {
+        finishAttacking();
+        // printf("Attack finished; ");
+    }
+    else if(attackTimer < currAttack->getAnimationDurationMs() - currAttack->getTimeToAttackMs())
+    {
+        if(!hasAttacked)
+        {
+            wantsToAttack = true;
+            printf("Attacked;\n");
+            hasAttacked = true;
+        }
+        else 
+        {
+            wantsToAttack = false;
+            // printf("Attacking - after attack; ");
+        }
+    }
+
+    // else printf("Attacking - before attack; ");
+    // printf("Attack timer - %f\n", attackTimer);
+}
+
+bool Player::getWantsToAttack()
+{
+    return wantsToAttack;
 }

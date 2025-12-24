@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	}
 
 	loopResult = game.gameLoop();
-	
+	printf("%d\n", loopResult);
 
 	game.cleanUp();
 	

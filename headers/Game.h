@@ -4,9 +4,18 @@
 #include <SDL.h>
 #include "Player.h"
 #include "UI.h"
+#include "LinkedList.h"
+#include "EnemyManager.h"
+#include "RenderManager.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+
+#define DESIRED_FPS 60.0
+#define FRAME_DELAY 1000.0 / DESIRED_FPS
+
+#define FIXED_DELTA_TIME_MS 1000.0 / DESIRED_FPS
+#define FIXED_DELTA_TIME_S FIXED_DELTA_TIME_MS * 0.001
 
 #define BACKGROUND_SPRITE_WIDTH 1280
 
@@ -23,6 +32,9 @@
 #define KEY_QUIT 27
 #define KEY_NEW_GAME 'n'
 
+#define POINTS_FOR_HIT 10
+#define COMBO_DURATION_MS 200
+
 #define RESULT_QUIT 0
 #define RESULT_NEW_GAME 1
 
@@ -35,23 +47,30 @@ class Game {
 
     private:
     int t1, t2, frames, rc;
+    int currPoints, currCombo;
+    int comboDurationMs;
     bool quit;
-	double delta, worldTime, fpsTimer, fps;
+	double deltaTimeMs, deltaTimeS, worldTime, fpsTimer, fps, updatesTimer;
     char textBuffer[128];
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-    Renderable *background;
+    WorldRenderable *background;
     UI* uiManager;
     Player *player;
     SDL_Rect camera, floor;
 
+    EnemyManager* enemyManager;
+    RenderManager* renderManager;
+    
+
     Renderable* txtTime;
 
     void handleRendering();
-    void handleEvents();
+    void handleInput();
     void updateUI();
+    void update();
     void reset();
 };
 #endif

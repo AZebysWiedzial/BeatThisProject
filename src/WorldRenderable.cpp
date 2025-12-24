@@ -19,6 +19,10 @@ void WorldRenderable::updateDestRect()
             destRect.x = x - (spriteWidth / 2);
             destRect.y = y - spriteHeight;
             break;
+        case CENTER:
+            destRect.x = x - (spriteWidth / 2);
+            destRect.y = y - (spriteHeight / 2);
+            break;
         default:
             break;
     }

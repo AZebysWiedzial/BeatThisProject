@@ -7,12 +7,26 @@
 #define HITBOX_HEIGHT 15
 #define HITBOX_WIDTH 30
 
+enum Direction
+{
+    LEFT,
+    RIGHT
+};
+
 class GameEntity : public WorldRenderable
 {
+    
+
     public:
-    GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
+    GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
     virtual void move(double deltaTime);
     void handleCollisions(SDL_Rect* floor);
+    void renderShadow();
+    virtual void dealDamage(int damage);
+    int getCurrHp();
+    int getMaxHp();
+    int getDirX();
+    Direction getFacingDirection();
 
     protected:
     int dirX;
@@ -20,7 +34,10 @@ class GameEntity : public WorldRenderable
     int prevX;
     int prevY;
     int speed;
+    int maxHp, currHp;
     bool hasMoved;
+    Direction facingDirection;
+
     
     WorldRenderable* shadow;
     SDL_Rect collider;

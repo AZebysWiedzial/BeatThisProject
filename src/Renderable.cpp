@@ -28,6 +28,7 @@ Renderable::Renderable(SDL_Renderer* renderer, double x, double y, int spriteWid
     // renderer = nullptr;
 
     anchor = TOP_RIGHT;
+    
 }
 
 
@@ -141,4 +142,16 @@ int Renderable::getX()
 int Renderable::getY()
 {
     return y;
+}
+void Renderable::setAnchor(RenderAnchor newAnchor)
+{
+    anchor = newAnchor;
+}
+void Renderable::setObjectWidth(int newWidth)
+{
+    objectWidth = newWidth;
+}
+void Renderable::setSpriteWidth(int newWidth)
+{
+    spriteWidth = newWidth;
 }

@@ -13,13 +13,14 @@ Game::Game()
     fps = 0;
     quit = false;
     worldTime = 0;
-    // screen = nullptr;
+    updatesTimer = 0;
+    currPoints = 0;
+    currCombo = 0;
     charset = nullptr;
     window = nullptr;
     renderer = nullptr;
-    // scrtex = nullptr;
     background = nullptr;
-    
+    enemyManager = nullptr;
 }
 
 int Game::init()
@@ -48,9 +49,16 @@ int Game::init()
     camera = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     floor = {0, SCREEN_HEIGHT - FLOOR_HEIGHT, BACKGROUND_SPRITE_WIDTH, FLOOR_HEIGHT};
     uiManager = new UI(renderer);
-    player = new Player(renderer, &camera, PLAYER_START_X, PLAYER_START_Y, 30, 30, 30, 30);
-    uiManager->initUI();
+    enemyManager = new EnemyManager(renderer, &camera);
+    player = new Player(renderer, &camera, PLAYER_START_X, PLAYER_START_Y, 100, 30, 30, 30, 30);
     background = new WorldRenderable(renderer, &camera, 0.0, 0.0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+    renderManager = new RenderManager(renderer, &camera, enemyManager->getEnemiesList(), player, background, uiManager);
+
+
+
+    enemyManager->spawnEnemy(100, SCREEN_HEIGHT - 20);
+
+    uiManager->initUI();
     if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
@@ -96,37 +104,56 @@ int Game::gameLoop()
 
     t1 = SDL_GetTicks();
 
-    while(!quit) {
-    t2 = SDL_GetTicks();
-
-    // here t2-t1 is the time in milliseconds since
-    // the last screen was drawn
-    // delta is the same time in seconds
-    delta = (t2 - t1) * 0.001;
-    t1 = t2;
-
-    worldTime += delta;
-
-    fpsTimer += delta;
-    if(fpsTimer > 0.5) 
+    while(!quit) 
     {
-        fps = frames * 2;
-        frames = 0;
-        fpsTimer -= 0.5;
-    }
-   
-    handleEvents();
+        t2 = SDL_GetTicks();
 
-    player->move(delta);
-    player->handleCollisions(&floor);
+        // timeFra is the time in milliseconds since
+        // the last screen was drawn
+        // delta is the same time in seconds
 
-    updateUI();
+        double deltaTimeMs = t2 - t1;
+        deltaTimeS = deltaTimeMs * 0.001;
+        t1 = t2;
+
+        updatesTimer += deltaTimeS;
+
+        worldTime += deltaTimeS;
+
+        fpsTimer += deltaTimeS;
+        if(fpsTimer > 0.5) 
+        {
+            fps = frames * 2;
+            frames = 0;
+            fpsTimer -= 0.5;
+        }
     
-    handleRendering();
+        while(updatesTimer >= FIXED_DELTA_TIME_S)
+        {
+            update();
+            updatesTimer -= FIXED_DELTA_TIME_S;
+        }
 
-    frames++;
+        handleInput();
+
+        player->handleAttacking(deltaTimeMs);
+        if(player->getWantsToAttack()) 
+        int hitEnemies = enemyManager->handlePlayerAttack(player->getX(), player->getY(), player->getFacingDirection(), player->attack());
+
+        
+        
+        updateUI();
+        handleRendering();
+
+        frames++;
+
+        if(FRAME_DELAY > deltaTimeS)
+        {
+            SDL_Delay(FRAME_DELAY - deltaTimeS);
+        }
+    printf("frame\n");
+
     }
-
     if(quit) return RESULT_QUIT;
     
     return RESULT_SUCCESS;
@@ -144,9 +171,11 @@ void Game::handleRendering()
 
     // printf("Camera: x - %d; y - %d\n", camera.x, camera.y);
 
-    background->render();
-    player->render();
-    uiManager->render();
+    renderManager->renderEverything();
+    // background->render();
+    // enemyManager->renderEnemies();
+    // player->render();
+    // uiManager->render();
 
     SDL_RenderPresent(renderer);
 }
@@ -161,25 +190,34 @@ void Game::cleanUp()
 
     SDL_Quit();
 }
-void Game::handleEvents()
+void Game::handleInput()
 {
     while(SDL_PollEvent(&event)) 
-        {
-            switch(event.type) {
-                case SDL_QUIT:
-                    quit = true;
-                    break;
-                case SDL_KEYDOWN:
-                    if(event.key.keysym.sym == KEY_NEW_GAME) reset();
-                    else if(event.key.keysym.sym == KEY_QUIT) quit = true;
-                    break;
-                }
-            player->handleEvents(event);
-        }
+    {
+        switch(event.type) {
+            case SDL_QUIT:
+                quit = true;
+                break;
+            case SDL_KEYDOWN:
+                if(event.key.keysym.sym == KEY_NEW_GAME) reset();
+                else if(event.key.keysym.sym == KEY_QUIT) quit = true;
+                break;
+            }
+        player->handleInput(event);
+    }
 }
 void Game::updateUI()
 {
     sprintf(textBuffer, "Time: %.1lf s  fps: %.0lf", worldTime, fps);
     txtTime->DrawText(textBuffer, charset, 1.5);
     
+}
+
+void Game::update()
+{
+    player->move(FIXED_DELTA_TIME_S);
+    enemyManager->handleEnemiesMovement(FIXED_DELTA_TIME_S);
+
+    player->handleCollisions(&floor);
+    enemyManager->handleEnemiesCollisions();
 }

@@ -1,3 +1,5 @@
+#ifndef WORLDRENDERABLE_H
+#define WORLDRENDERABLE_H
 #include "Renderable.h"
 
 class WorldRenderable : public Renderable
@@ -10,3 +12,4 @@ class WorldRenderable : public Renderable
     private:
     SDL_Rect* camera;
 };
+#endif

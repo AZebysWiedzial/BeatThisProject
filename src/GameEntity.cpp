@@ -1,10 +1,12 @@
 #include "GameEntity.h"
 
-GameEntity::GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : WorldRenderable(renderer, camera, x, y, spriteWidth, spriteHeight, objectWidth, objectHeight)
+GameEntity::GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : WorldRenderable(renderer, camera, x, y, spriteWidth, spriteHeight, objectWidth, objectHeight)
 {
     dirX = 0;
     dirY = 0;
 
+    maxHp = hp;
+    currHp = maxHp;
     collider = {(int)(x - (HITBOX_WIDTH / 2)), (int)(y - HITBOX_HEIGHT), HITBOX_WIDTH, HITBOX_HEIGHT};
 
     anchor = BOTTOM_CENTER;
@@ -31,5 +33,27 @@ void GameEntity::handleCollisions(SDL_Rect* floor)
     }
 }
 
+void GameEntity::dealDamage(int damage)
+{
+    currHp -= damage;
+}
+int GameEntity::getCurrHp()
+{
+    return currHp;
+}
+int GameEntity::getMaxHp()
+{
+    return maxHp;
+}
+int GameEntity::getDirX()
+{
+    return  dirX;
+}
+Direction GameEntity::getFacingDirection()
+{
+    return facingDirection;
+}
+void GameEntity::renderShadow()
+{
 
-
+}
