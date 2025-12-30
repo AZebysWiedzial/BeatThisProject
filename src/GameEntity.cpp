@@ -16,7 +16,18 @@ void GameEntity::move(double deltaTime)
 {
     prevX = x;
     prevY = y;
+
+    hasMoved = false;
 }
+void GameEntity::undoMoveX()
+{
+    x = prevX;
+}
+void GameEntity::undoMoveY()
+{
+    y = prevY;
+}
+
 
 void GameEntity::handleCollisions(SDL_Rect* floor)
 {
@@ -31,6 +42,8 @@ void GameEntity::handleCollisions(SDL_Rect* floor)
     {
         y = prevY;
     }
+
+    
 }
 
 void GameEntity::dealDamage(int damage)
@@ -48,6 +61,10 @@ int GameEntity::getMaxHp()
 int GameEntity::getDirX()
 {
     return  dirX;
+}
+bool GameEntity::getHasMoved()
+{
+    return hasMoved;
 }
 Direction GameEntity::getFacingDirection()
 {

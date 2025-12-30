@@ -15,13 +15,13 @@ void EnemyManager::spawnEnemy(int x, int y)
 }
 void EnemyManager::handleEnemiesCollisions()
 {
-
+    
 }
 int EnemyManager::handlePlayerAttack(double playerX, double playerY, Direction playerDirection, Attack* attack)
 {
     int hitEnemies = 0;
-    enemies.forEachAndRemoveIf([playerX, playerY, playerDirection, attack, &hitEnemies](Enemy* enemy){
-        if(playerX < enemy->getX() && playerDirection == RIGHT || playerX > enemy->getX() && playerDirection == LEFT)
+    enemies.forEachAndRemoveIf([&](Enemy* enemy){
+        if((playerX < enemy->getX() && playerDirection == RIGHT) || (playerX > enemy->getX() && playerDirection == LEFT))
             if(abs(enemy->getX() - playerX) <= attack->getRange() && abs(enemy->getY() - playerY) <= attack->getSweepingRange())
                 {
                     enemy->dealDamage(attack->getDamage());   
@@ -39,22 +39,26 @@ void EnemyManager::handleEnemiesMovement(double deltaTime)
         enemy->move(deltaTime);
     });
 }
-void EnemyManager::renderEnemies()
-{
-    // enemies.sort();
-    enemies.forEach([](Enemy* enemy){
-        enemy->renderShadow();
-    });
+// void EnemyManager::renderEnemies()
+// {
+//     // enemies.sort();
+//     enemies.forEach([](Enemy* enemy){
+//         enemy->renderShadow();
+//     });
 
-    enemies.forEach([](Enemy* enemy){
-        enemy->render();
-    });
+//     enemies.forEach([](Enemy* enemy){
+//         enemy->render();
+//     });
 
-    enemies.forEach([](Enemy* enemy){
-        enemy->renderHpBar();
-    });
-}
+//     enemies.forEach([](Enemy* enemy){
+//         enemy->renderHpBar();
+//     });
+// }
 LinkedList<Enemy*>* EnemyManager::getEnemiesList()
 {
     return &enemies;
+}
+void EnemyManager::clearEnemies()
+{
+    enemies.clear();
 }

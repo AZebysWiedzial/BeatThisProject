@@ -10,14 +10,13 @@
 class RenderManager
 {
     public:
-    RenderManager(SDL_Renderer* renderer, SDL_Rect* camera, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* uiManager);
+    RenderManager(SDL_Renderer* renderer, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* uiManager);
     void renderGameEntities();
     void renderUI();
     void renderEverything();
     
     private:
     SDL_Renderer* renderer;
-    SDL_Rect* camera;
     LinkedList<Enemy*>* enemies;
     Player* player;
     WorldRenderable* background;

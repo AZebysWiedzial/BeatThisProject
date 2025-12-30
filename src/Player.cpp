@@ -11,6 +11,7 @@ Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int
 
     lightAttack = new Attack(10, 100, 30, 500, 250);
     heavyAttack = new Attack(30, 100, 50, 1000, 500);
+    currAttack = nullptr;
 
     setRectangleAsSprite(255, 0, 0);
 }
@@ -22,6 +23,8 @@ void Player::move(double deltaTime)
     double dy = dirY;
 
     normalizeVector(&dx, &dy);
+
+    if(dx != 0 || dy != 0) hasMoved = true;
 
     x += dx * speed * deltaTime;
     y += dy * speed * deltaTime;
@@ -49,6 +52,7 @@ void Player::handleInput(SDL_Event& event)
             else if(event.key.keysym.sym == KEY_UP) dirY = -1;
             else if(!isAttacking && event.key.keysym.sym == KEY_LIGHT_ATTACK) startAttacking(lightAttack);
             else if(!isAttacking && event.key.keysym.sym == KEY_HEAVY_ATTACK) startAttacking(heavyAttack);
+            else if(event.key.keysym.sym == 'p') dealDamage(10);
             break;
 
         case SDL_KEYUP:
@@ -67,7 +71,6 @@ void Player::startAttacking(Attack* attack)
     attackTimer = currAttack->getAnimationDurationMs();
     isAttacking = true;
     hasAttacked = false;
-
 }
 Attack* Player::attack()
 {
@@ -78,6 +81,7 @@ void Player::finishAttacking()
     currAttack = nullptr;
     isAttacking = false;
     attackTimer = 0;
+    wantsToAttack = false;
 }
 void Player::handleAttacking(double deltaTime)
 {
@@ -89,12 +93,11 @@ void Player::handleAttacking(double deltaTime)
         finishAttacking();
         // printf("Attack finished; ");
     }
-    else if(attackTimer < currAttack->getAnimationDurationMs() - currAttack->getTimeToAttackMs())
+    else if(attackTimer <= currAttack->getAnimationDurationMs() - currAttack->getTimeToAttackMs())
     {
         if(!hasAttacked)
         {
             wantsToAttack = true;
-            printf("Attacked;\n");
             hasAttacked = true;
         }
         else 
@@ -105,7 +108,10 @@ void Player::handleAttacking(double deltaTime)
     }
 
     // else printf("Attacking - before attack; ");
-    // printf("Attack timer - %f\n", attackTimer);
+    int attack = 0;
+    if(currAttack == lightAttack) attack = 1;
+    else if(currAttack == heavyAttack) attack = 2;
+    printf("Attack timer - %f; current attack: %d\n", attackTimer, attack);
 }
 
 bool Player::getWantsToAttack()

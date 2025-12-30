@@ -7,6 +7,7 @@
 #include "LinkedList.h"
 #include "EnemyManager.h"
 #include "RenderManager.h"
+// #include "CollisionManager.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -14,7 +15,7 @@
 #define DESIRED_FPS 60.0
 #define FRAME_DELAY 1000.0 / DESIRED_FPS
 
-#define FIXED_DELTA_TIME_MS 1000.0 / DESIRED_FPS
+#define FIXED_DELTA_TIME_MS 1000.0 / 60.0
 #define FIXED_DELTA_TIME_S FIXED_DELTA_TIME_MS * 0.001
 
 #define BACKGROUND_SPRITE_WIDTH 1280
@@ -33,7 +34,7 @@
 #define KEY_NEW_GAME 'n'
 
 #define POINTS_FOR_HIT 10
-#define COMBO_DURATION_MS 200
+#define COMBO_DURATION_MS 2000
 
 #define RESULT_QUIT 0
 #define RESULT_NEW_GAME 1
@@ -63,6 +64,7 @@ class Game {
 
     EnemyManager* enemyManager;
     RenderManager* renderManager;
+    // CollisionManager* collisionManager;
     
 
     Renderable* txtTime;

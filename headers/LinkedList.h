@@ -27,6 +27,7 @@ template <typename T> class LinkedList
     // template <typename... Args>
     // void addAll(Args&... vals);
     void removeAfter(Node* node);
+    void clear();
     template <typename Function>
     void forEach(Function func);
     template <typename Function>
@@ -48,11 +49,9 @@ LinkedList<T>::LinkedList()
 template <typename T>
 LinkedList<T>::~LinkedList()
 {
-    while(head->next != nullptr)
-    {
-        removeAfter(head);
-    }
+    clear();
     delete head;
+    // delete tail;
 }
 
 template <typename T>
@@ -76,7 +75,18 @@ void LinkedList<T>::removeAfter(Node* prev)
 {
     Node* nodeToRemove = prev->next;
     prev->next = nodeToRemove->next;
+
+    if(nodeToRemove == tail) tail = prev;
     delete nodeToRemove;
+}
+
+template <typename T>
+void LinkedList<T>::clear()
+{
+    while(head->next != nullptr)
+    {
+        removeAfter(head);
+    }
 }
 
 template <typename T>

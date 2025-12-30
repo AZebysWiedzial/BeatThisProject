@@ -23,9 +23,12 @@ class GameEntity : public WorldRenderable
     void handleCollisions(SDL_Rect* floor);
     void renderShadow();
     virtual void dealDamage(int damage);
+    void undoMoveX();
+    void undoMoveY();
     int getCurrHp();
     int getMaxHp();
     int getDirX();
+    bool getHasMoved();
     Direction getFacingDirection();
 
     protected:

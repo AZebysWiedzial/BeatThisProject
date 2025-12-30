@@ -13,7 +13,7 @@ class EnemyManager
     void handleEnemiesMovement(double deltaTime);
     void handleEnemiesCollisions();
     int handlePlayerAttack(double playerX, double playerY, Direction playerDirection, Attack* attack);
-    // void deleteDeadEnemies();
+    void clearEnemies();
     void renderEnemies();
     LinkedList<Enemy*>* getEnemiesList();
 

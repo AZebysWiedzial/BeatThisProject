@@ -1,10 +1,9 @@
 #include "RenderManager.h"
 #include <stdio.h>
 
-RenderManager::RenderManager(SDL_Renderer* renderer, SDL_Rect* camera, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* uiManager)
+RenderManager::RenderManager(SDL_Renderer* renderer, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* uiManager)
 {
     this->renderer = renderer;
-    this->camera = camera;
     this->enemies = enemies;
     this->player = player;
     this->background = background;

@@ -52,7 +52,8 @@ int Game::init()
     enemyManager = new EnemyManager(renderer, &camera);
     player = new Player(renderer, &camera, PLAYER_START_X, PLAYER_START_Y, 100, 30, 30, 30, 30);
     background = new WorldRenderable(renderer, &camera, 0.0, 0.0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderManager = new RenderManager(renderer, &camera, enemyManager->getEnemiesList(), player, background, uiManager);
+    renderManager = new RenderManager(renderer, enemyManager->getEnemiesList(), player, background, uiManager);
+    // collisionManager = new CollisionManager(player, enemyManager->getEnemiesList(), &floor);
 
 
 
@@ -94,6 +95,10 @@ void Game::reset()
     
     player->setX(PLAYER_START_X);
     player->setY(PLAYER_START_Y);
+
+    enemyManager->clearEnemies();
+    enemyManager->spawnEnemy(100, SCREEN_HEIGHT - 20);
+
 
     printf("new game\n");
 }
@@ -137,13 +142,33 @@ int Game::gameLoop()
         handleInput();
 
         player->handleAttacking(deltaTimeMs);
-        if(player->getWantsToAttack()) 
-        int hitEnemies = enemyManager->handlePlayerAttack(player->getX(), player->getY(), player->getFacingDirection(), player->attack());
 
+        comboDurationMs -= deltaTimeMs;
+        int hitEnemies = 0;
+        printf("%d\n", player->getWantsToAttack());
+        if(player->getWantsToAttack()) 
+            hitEnemies = enemyManager->handlePlayerAttack(player->getX(), player->getY(), player->getFacingDirection(), player->attack());
+
+        if(hitEnemies > 0) 
+        {
+            comboDurationMs = COMBO_DURATION_MS;
+            currCombo += hitEnemies;
+        }
+        if(comboDurationMs <= 0) 
+        {
+            comboDurationMs = 0;
+            currCombo = 0;
+        }
         
+        int pointsToAdd = ((2 * currCombo + hitEnemies - 1) * POINTS_FOR_HIT) * hitEnemies / 2;
+        currPoints += pointsToAdd;
+        // printf("Current combo: %d; Combo ms left: %d\n", currCombo, comboDurationMs);
+        // printf("Current points: %d\n", currPoints);
         
         updateUI();
         handleRendering();
+
+        
 
         frames++;
 
@@ -151,7 +176,7 @@ int Game::gameLoop()
         {
             SDL_Delay(FRAME_DELAY - deltaTimeS);
         }
-    printf("frame\n");
+    
 
     }
     if(quit) return RESULT_QUIT;
@@ -220,4 +245,5 @@ void Game::update()
 
     player->handleCollisions(&floor);
     enemyManager->handleEnemiesCollisions();
+    // collisionManager->handleAllCollisions();
 }
