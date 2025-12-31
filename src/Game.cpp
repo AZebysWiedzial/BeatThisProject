@@ -5,6 +5,11 @@
 
 #include "Game.h"
 #include "graphics.h"
+#include "UIElement.h"
+#include "UIText.h"
+#include "UITextDisplay.h"
+#include "UIRectangle.h"
+#include "UIRectangleDisplay.h"
 
 Game::Game()
 {
@@ -51,7 +56,7 @@ int Game::init()
     uiManager = new UI(renderer);
     enemyManager = new EnemyManager(renderer, &camera);
     player = new Player(renderer, &camera, PLAYER_START_X, PLAYER_START_Y, 100, 30, 30, 30, 30);
-    background = new WorldRenderable(renderer, &camera, 0.0, 0.0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+    background = new WorldRenderable(renderer, &camera, 0.0, 0.0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT);
     renderManager = new RenderManager(renderer, enemyManager->getEnemiesList(), player, background, uiManager);
     // collisionManager = new CollisionManager(player, enemyManager->getEnemiesList(), &floor);
 
@@ -59,7 +64,7 @@ int Game::init()
 
     enemyManager->spawnEnemy(100, SCREEN_HEIGHT - 20);
 
-    uiManager->initUI();
+    // uiManager->initUI();
     if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
@@ -75,12 +80,16 @@ int Game::init()
     }
 	SDL_SetColorKey(charset, true, SDL_MapRGB(charset->format, 0, 0, 0));
 
-    Renderable* uiBackground = new Renderable(renderer, 0, 0, 640, 50, 640, 50);
-    uiBackground->setRectangleAsSprite(100, 100, 100);
+    UIRectangle* uiBackground = new UIRectangle(renderer, 0, 0, 640, 50, 100, 100, 100);
+    UIRectangleDisplay* playerHpBar = new UIRectangleDisplay(renderer, 10, 10, PLAYER_HP_BAR_LENGTH, 20, 255, 0, 0, player->getHp());
+    UITextDisplay* txtTime = new UITextDisplay(renderer, 300, 10, 100, 100, "Time:", &worldTime);
+    UITextDisplay* txtFPS = new UITextDisplay(renderer, 550, 10, 100, 100, "FPS:", &fps);
+    
 
-    txtTime = new Renderable(renderer, 10, 10, 100, 100, 80, 40);
     uiManager->add(uiBackground);
+    uiManager->add(playerHpBar);
     uiManager->add(txtTime);
+    uiManager->add(txtFPS);
 
 
     return RESULT_SUCCESS;
@@ -145,7 +154,7 @@ int Game::gameLoop()
 
         comboDurationMs -= deltaTimeMs;
         int hitEnemies = 0;
-        printf("%d\n", player->getWantsToAttack());
+        // printf("%d\n", player->getWantsToAttack());
         if(player->getWantsToAttack()) 
             hitEnemies = enemyManager->handlePlayerAttack(player->getX(), player->getY(), player->getFacingDirection(), player->attack());
 
@@ -165,7 +174,7 @@ int Game::gameLoop()
         // printf("Current combo: %d; Combo ms left: %d\n", currCombo, comboDurationMs);
         // printf("Current points: %d\n", currPoints);
         
-        updateUI();
+        uiManager->update();
         handleRendering();
 
         
@@ -197,10 +206,7 @@ void Game::handleRendering()
     // printf("Camera: x - %d; y - %d\n", camera.x, camera.y);
 
     renderManager->renderEverything();
-    // background->render();
-    // enemyManager->renderEnemies();
-    // player->render();
-    // uiManager->render();
+    
 
     SDL_RenderPresent(renderer);
 }
@@ -231,12 +237,7 @@ void Game::handleInput()
         player->handleInput(event);
     }
 }
-void Game::updateUI()
-{
-    sprintf(textBuffer, "Time: %.1lf s  fps: %.0lf", worldTime, fps);
-    txtTime->DrawText(textBuffer, charset, 1.5);
-    
-}
+
 
 void Game::update()
 {

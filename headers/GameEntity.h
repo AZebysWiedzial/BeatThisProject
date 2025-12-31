@@ -15,8 +15,6 @@ enum Direction
 
 class GameEntity : public WorldRenderable
 {
-    
-
     public:
     GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
     virtual void move(double deltaTime);

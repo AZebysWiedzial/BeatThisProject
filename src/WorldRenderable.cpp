@@ -7,31 +7,7 @@ WorldRenderable::WorldRenderable(SDL_Renderer* renderer, SDL_Rect* camera, doubl
 
 void WorldRenderable::updateDestRect()
 {
-    destRect.w = spriteWidth;
-    destRect.h = spriteHeight;
-    switch(anchor)
-    {
-        case TOP_RIGHT:
-            destRect.x = x;
-            destRect.y = y;
-            break;
-        case BOTTOM_CENTER:
-            destRect.x = x - (spriteWidth / 2);
-            destRect.y = y - spriteHeight;
-            break;
-        case CENTER:
-            destRect.x = x - (spriteWidth / 2);
-            destRect.y = y - (spriteHeight / 2);
-            break;
-        default:
-            break;
-    }
+    Renderable::updateDestRect();
     destRect.x -= camera->x;
     destRect.y -= camera->y;
-}
-
-void WorldRenderable::render()
-{
-    updateDestRect();
-    Renderable::render();
 }

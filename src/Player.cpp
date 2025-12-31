@@ -118,3 +118,8 @@ bool Player::getWantsToAttack()
 {
     return wantsToAttack;
 }
+
+int* Player::getHp()
+{
+    return &currHp;
+}

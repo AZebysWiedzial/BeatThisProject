@@ -67,11 +67,10 @@ class Game {
     // CollisionManager* collisionManager;
     
 
-    Renderable* txtTime;
+    
 
     void handleRendering();
     void handleInput();
-    void updateUI();
     void update();
     void reset();
 };

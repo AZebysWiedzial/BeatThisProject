@@ -1,4 +1,5 @@
 #include "GameEntity.h"
+#include <stdio.h>
 
 GameEntity::GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : WorldRenderable(renderer, camera, x, y, spriteWidth, spriteHeight, objectWidth, objectHeight)
 {
@@ -49,6 +50,7 @@ void GameEntity::handleCollisions(SDL_Rect* floor)
 void GameEntity::dealDamage(int damage)
 {
     currHp -= damage;
+    // printf("Entity took %d damage; current HP: %d\n", damage, currHp);
 }
 int GameEntity::getCurrHp()
 {

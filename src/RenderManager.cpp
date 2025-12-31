@@ -45,7 +45,6 @@ void RenderManager::renderUI()
 }
 void RenderManager::renderEverything()
 {
-    if(background == nullptr) printf("Background is null\n");
     background->render();
     renderGameEntities();
     renderUI();

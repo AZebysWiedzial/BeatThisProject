@@ -2,7 +2,6 @@
 #define RENDERABLE_H
 #include<SDL.h>
 
-#define CHAR_BITMAP_SIZE 8
 
 class Renderable
 {
@@ -19,11 +18,11 @@ class Renderable
     Renderable();
     Renderable(SDL_Renderer* renderer, double x, double y, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
     virtual void render();
+    virtual void updateDestRect();
     int setSprite(const char* filePath);
     int setSprite(SDL_Surface* sprite);
     int setRectangleAsSprite(uint8_t red, uint8_t green, uint8_t blue);
     void setTextureFromSprite();
-    void DrawText(const char *text, SDL_Surface *charset, double scale);
     int getX();
     int getY();
     void setX(double newX);

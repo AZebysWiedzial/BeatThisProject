@@ -25,6 +25,7 @@ class Player : public GameEntity
         void finishAttacking();
         void handleAttacking(double deltaTime);
         bool getWantsToAttack();
+        int* getHp();
         
         
     private:
