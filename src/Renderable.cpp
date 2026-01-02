@@ -49,12 +49,12 @@ void Renderable::updateDestRect()
             destRect.y = y;
             break;
         case BOTTOM_CENTER:
-            destRect.x = x - (spriteWidth / 2);
-            destRect.y = y - spriteHeight;
+            destRect.x = x - (objectWidth / 2);
+            destRect.y = y - objectHeight;
             break;
         case CENTER:
-            destRect.x = x - (spriteWidth / 2);
-            destRect.y = y - (spriteHeight / 2);
+            destRect.x = x - (objectWidth / 2);
+            destRect.y = y - (objectHeight / 2);
             break;
         default:
             break;

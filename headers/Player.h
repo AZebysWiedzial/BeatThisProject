@@ -19,7 +19,7 @@ class Player : public GameEntity
     public:
         Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight);
         void move(double deltaTime) override;
-        void handleInput(SDL_Event& event);
+        void handleInput(SDL_Event* event);
         void startAttacking(Attack* attack);
         Attack* attack();
         void finishAttacking();

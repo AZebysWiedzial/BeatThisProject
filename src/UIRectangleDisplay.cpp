@@ -36,6 +36,4 @@ void UIRectangleDisplay::update()
     else if(scale > 1.0) scale = 1.0;
 
     setWidth((int)(initialWidth * scale));
-
-    printf("UIRectangleDisplay update: value - %f; maxValue - %f; new width - %d\n", value, maxValue, destRect.w);
 }

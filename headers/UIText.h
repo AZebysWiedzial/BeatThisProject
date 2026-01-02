@@ -11,10 +11,12 @@ class UIText : public UIElement
     public:
     UIText(SDL_Renderer* renderer, double x, double y, int width, int height, const char* text);
     virtual void setText(const char* newText);
+    const char* getText();
 
     protected:
-    const char* text;
+    char* text;
     SDL_Surface* charset;
+    int fontSize;
 
     virtual void DrawText();
 

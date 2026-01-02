@@ -1,13 +1,14 @@
 #include "RenderManager.h"
 #include <stdio.h>
 
-RenderManager::RenderManager(SDL_Renderer* renderer, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* uiManager)
+RenderManager::RenderManager(SDL_Renderer* renderer, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* gameUI, UI* deathScreenUI)
 {
     this->renderer = renderer;
     this->enemies = enemies;
     this->player = player;
     this->background = background;
-    this->uiManager = uiManager;
+    this->gameUI = gameUI;
+    this->deathScreenUI = deathScreenUI;
 }
 void RenderManager::renderGameEntities()
 {
@@ -41,7 +42,8 @@ void RenderManager::renderGameEntities()
 }
 void RenderManager::renderUI()
 {
-    uiManager->render();
+    gameUI->render();
+    if(deathScreenUI->getIsActive()) deathScreenUI->render();
 }
 void RenderManager::renderEverything()
 {

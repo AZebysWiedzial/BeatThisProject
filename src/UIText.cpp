@@ -13,28 +13,40 @@ UIText::UIText(SDL_Renderer* renderer, double x, double y, int width, int height
     {
         SDL_SetColorKey(charset, true, SDL_MapRGB(charset->format, 0, 0, 0));
     }
+    this->text = nullptr;
     setText(text);
 }
 
 void UIText::setText(const char* newText)
 {
-    text = newText;
+    int newTextLength = strlen(newText);
+
+    if(text != nullptr) delete[] text;
+    text = new char[newTextLength + 1];
+    text[newTextLength] = '\0';
+    strcpy(text, newText);
+
     DrawText();
 }
 
 void UIText::DrawText() 
 {
+    if(strlen(text) == 0) 
+    {
+        if(sprite != nullptr) SDL_FreeSurface(sprite);
+        sprite = SDL_CreateRGBSurface(0, 1, CHAR_BITMAP_SIZE, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+        setTextureFromSprite();
+        return;
+    }
 	int px, py, c;
     int tempX = 0, tempY = 0;
 
     int textWidth = strlen(text) * CHAR_BITMAP_SIZE;
+    
 
     // double scale = (double)destRect.w / (double)textWidth;
 
-    // srcRect.w = textWidth;
-    // srcRect.h = CHAR_BITMAP_SIZE;
-    // srcRect.x = 0;
-    // srcRect.y = 0;
+    
 
 	SDL_Rect s, d;
     s.w = CHAR_BITMAP_SIZE;
@@ -43,6 +55,7 @@ void UIText::DrawText()
 	d.h = CHAR_BITMAP_SIZE;    
     if(sprite != nullptr) SDL_FreeSurface(sprite);
     sprite = SDL_CreateRGBSurface(0, textWidth, CHAR_BITMAP_SIZE, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+    
     
     const char* textPtr = text;
 	while(*textPtr) 
@@ -66,14 +79,20 @@ void UIText::DrawText()
     spriteWidth = textWidth;
     spriteHeight = CHAR_BITMAP_SIZE;
 
-    
+    int heightBefore = objectHeight;
+    preserveScale = false;
     setWidth(textWidth);
     setHeight(CHAR_BITMAP_SIZE);
+
+    preserveScale = true;
+    setHeight(heightBefore);
+    
     
     // SDL_SaveBMP(sprite, "debug_text.bmp");
     setTextureFromSprite();
     // SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE);
     SDL_SetTextureAlphaMod(texture, 255);
+    SDL_SetTextureColorMod(texture, red, green, blue);
     
 
 }

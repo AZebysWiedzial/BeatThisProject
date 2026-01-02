@@ -26,7 +26,7 @@ void Enemy::dealDamage(int damage)
 void Enemy::updateHpBar()
 {
     hpBar->setPosition(x, y - objectHeight - 20);
-    hpBar->setSpriteWidth(((double)currHp / (double)maxHp) * objectWidth);
+    hpBar->setObjectWidth(((double)currHp / (double)maxHp) * objectWidth);
 }
 
 void Enemy::renderHpBar()

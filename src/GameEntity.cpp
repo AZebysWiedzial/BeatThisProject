@@ -50,7 +50,12 @@ void GameEntity::handleCollisions(SDL_Rect* floor)
 void GameEntity::dealDamage(int damage)
 {
     currHp -= damage;
+    if(currHp < 0) currHp = 0;
     // printf("Entity took %d damage; current HP: %d\n", damage, currHp);
+}
+bool GameEntity::isDead()
+{
+    return (currHp <= 0);
 }
 int GameEntity::getCurrHp()
 {

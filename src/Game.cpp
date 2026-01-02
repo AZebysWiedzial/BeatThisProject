@@ -10,6 +10,7 @@
 #include "UITextDisplay.h"
 #include "UIRectangle.h"
 #include "UIRectangleDisplay.h"
+#include "UITextField.h"
 
 Game::Game()
 {
@@ -17,6 +18,8 @@ Game::Game()
     fpsTimer = 0;
     fps = 0;
     quit = false;
+    isPaused = false;
+    isGameOver = false;
     worldTime = 0;
     updatesTimer = 0;
     currPoints = 0;
@@ -53,18 +56,24 @@ int Game::init()
 
     camera = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     floor = {0, SCREEN_HEIGHT - FLOOR_HEIGHT, BACKGROUND_SPRITE_WIDTH, FLOOR_HEIGHT};
-    uiManager = new UI(renderer);
+
+    gameUI = new UI(renderer, true);
+    deathScreenUI = new UI(renderer, false);
+
     enemyManager = new EnemyManager(renderer, &camera);
     player = new Player(renderer, &camera, PLAYER_START_X, PLAYER_START_Y, 100, 30, 30, 30, 30);
+
     background = new WorldRenderable(renderer, &camera, 0.0, 0.0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT);
-    renderManager = new RenderManager(renderer, enemyManager->getEnemiesList(), player, background, uiManager);
+    renderManager = new RenderManager(renderer, enemyManager->getEnemiesList(), player, background, gameUI, deathScreenUI);
     // collisionManager = new CollisionManager(player, enemyManager->getEnemiesList(), &floor);
+
+
 
 
 
     enemyManager->spawnEnemy(100, SCREEN_HEIGHT - 20);
 
-    // uiManager->initUI();
+    
     if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
@@ -82,21 +91,29 @@ int Game::init()
 
     UIRectangle* uiBackground = new UIRectangle(renderer, 0, 0, 640, 50, 100, 100, 100);
     UIRectangleDisplay* playerHpBar = new UIRectangleDisplay(renderer, 10, 10, PLAYER_HP_BAR_LENGTH, 20, 255, 0, 0, player->getHp());
-    UITextDisplay* txtTime = new UITextDisplay(renderer, 300, 10, 100, 100, "Time:", &worldTime);
-    UITextDisplay* txtFPS = new UITextDisplay(renderer, 550, 10, 100, 100, "FPS:", &fps);
-    
+    UITextDisplay* txtTime = new UITextDisplay(renderer, 300, 10, 100, 16, "Time:", &worldTime);
+    UITextDisplay* txtFPS = new UITextDisplay(renderer, 550, 10, 100, 16, "FPS:", &fps);
 
-    uiManager->add(uiBackground);
-    uiManager->add(playerHpBar);
-    uiManager->add(txtTime);
-    uiManager->add(txtFPS);
+    gameUI->add(uiBackground);
+    gameUI->add(playerHpBar);
+    gameUI->add(txtTime);
+    gameUI->add(txtFPS);
 
+    UIRectangle* deathScreenBackground = new UIRectangle(renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 100, 100, 100);
+    deathScreenBackground->setOpacity(150);
+    UITextField* textFieldName = new UITextField(renderer, 100, 100, 100, 16);
+
+    deathScreenUI->add(deathScreenBackground);
+    deathScreenUI->add(textFieldName);
 
     return RESULT_SUCCESS;
 }
 
 void Game::reset()
 {
+    gameUI->setActive(true);
+    deathScreenUI->setActive(false);
+
     worldTime = 0;
 
     camera.x = 0;
@@ -122,18 +139,29 @@ int Game::gameLoop()
     {
         t2 = SDL_GetTicks();
 
-        // timeFra is the time in milliseconds since
-        // the last screen was drawn
-        // delta is the same time in seconds
-
-        double deltaTimeMs = t2 - t1;
+        deltaTimeMs = t2 - t1;
         deltaTimeS = deltaTimeMs * 0.001;
         t1 = t2;
 
+        handleInput();   
+        if(isPaused)
+        {
+            handleRendering();
+            // printf("Game paused\n");
+            continue;
+        }
+        else if(isGameOver)
+        {
+            gameUI->setActive(false);
+            deathScreenUI->setActive(true);
+            deathScreenUI->update();
+            handleRendering();
+            // printf("Game over\n");
+            continue;
+        } 
+
         updatesTimer += deltaTimeS;
-
         worldTime += deltaTimeS;
-
         fpsTimer += deltaTimeS;
         if(fpsTimer > 0.5) 
         {
@@ -141,20 +169,17 @@ int Game::gameLoop()
             frames = 0;
             fpsTimer -= 0.5;
         }
-    
+        
         while(updatesTimer >= FIXED_DELTA_TIME_S)
         {
             update();
             updatesTimer -= FIXED_DELTA_TIME_S;
         }
 
-        handleInput();
-
         player->handleAttacking(deltaTimeMs);
 
         comboDurationMs -= deltaTimeMs;
         int hitEnemies = 0;
-        // printf("%d\n", player->getWantsToAttack());
         if(player->getWantsToAttack()) 
             hitEnemies = enemyManager->handlePlayerAttack(player->getX(), player->getY(), player->getFacingDirection(), player->attack());
 
@@ -171,10 +196,11 @@ int Game::gameLoop()
         
         int pointsToAdd = ((2 * currCombo + hitEnemies - 1) * POINTS_FOR_HIT) * hitEnemies / 2;
         currPoints += pointsToAdd;
-        // printf("Current combo: %d; Combo ms left: %d\n", currCombo, comboDurationMs);
-        // printf("Current points: %d\n", currPoints);
+
+        if(player->isDead()) isGameOver = true;
         
-        uiManager->update();
+        gameUI->update();
+        
         handleRendering();
 
         
@@ -203,9 +229,14 @@ void Game::handleRendering()
     if(camera.x < 0) camera.x = 0;
     else if(camera.x > BACKGROUND_SPRITE_WIDTH - camera.w) camera.x = BACKGROUND_SPRITE_WIDTH - camera.w;
 
-    // printf("Camera: x - %d; y - %d\n", camera.x, camera.y);
-
     renderManager->renderEverything();
+
+    if(isPaused)
+    {
+        UIText pauseText(renderer, SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 10, 100, 20, "PAUSED");
+        pauseText.setColor(0, 0, 0);
+        pauseText.render();
+    }
     
 
     SDL_RenderPresent(renderer);
@@ -230,11 +261,14 @@ void Game::handleInput()
                 quit = true;
                 break;
             case SDL_KEYDOWN:
-                if(event.key.keysym.sym == KEY_NEW_GAME) reset();
+                if(!isPaused && !isGameOver && event.key.keysym.sym == KEY_NEW_GAME) reset();
                 else if(event.key.keysym.sym == KEY_QUIT) quit = true;
+                else if(!isGameOver && event.key.keysym.sym == KEY_PAUSE) isPaused = !isPaused;
                 break;
             }
-        player->handleInput(event);
+        if(!isPaused && !isGameOver) player->handleInput(&event);
+        gameUI->handleInput(&event);
+        deathScreenUI->handleInput(&event);
     }
 }
 

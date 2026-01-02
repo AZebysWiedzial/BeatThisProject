@@ -23,6 +23,7 @@ class GameEntity : public WorldRenderable
     virtual void dealDamage(int damage);
     void undoMoveX();
     void undoMoveY();
+    bool isDead();
     int getCurrHp();
     int getMaxHp();
     int getDirX();

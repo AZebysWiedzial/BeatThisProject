@@ -10,11 +10,13 @@ class UIElement : public Renderable
     void setWidth(int width);
     void setHeight(int height);
     void setColor(uint8_t red, uint8_t green, uint8_t blue);
+    void setOpacity(uint8_t opacity);
     virtual void update() {};
+    virtual void handleInput(SDL_Event* event) {};
 
-    private:
+    protected:
     bool preserveScale;
     
-
+    int red, green, blue;
 };
 #endif

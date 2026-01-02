@@ -9,14 +9,17 @@
 class UI
 {
     public:
-    UI(SDL_Renderer* renderer);
+    UI(SDL_Renderer* renderer, bool isActive);
     // void initUI();
     void render();
     void add(UIElement* element);
     void update();
+    void handleInput(SDL_Event* event);
+    void setActive(bool active);
+    bool getIsActive();
 
     private:
-    char textBuffer[128];
+    bool isActive;
     
     SDL_Renderer* renderer;
     LinkedList<UIElement*> uiElements;

@@ -32,6 +32,7 @@
 
 #define KEY_QUIT 27
 #define KEY_NEW_GAME 'n'
+#define KEY_PAUSE 'p'
 
 #define POINTS_FOR_HIT 10
 #define COMBO_DURATION_MS 2000
@@ -50,24 +51,22 @@ class Game {
     int t1, t2, frames, rc;
     int currPoints, currCombo;
     int comboDurationMs;
-    bool quit;
-	double deltaTimeMs, deltaTimeS, worldTime, fpsTimer, fps, updatesTimer;
+    bool quit, isPaused, isGameOver;
+	double deltaTimeMs, deltaTimeS, worldTime, fpsTimer, fps, updatesTimer, pauseTimer;
     char textBuffer[128];
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
     WorldRenderable *background;
-    UI* uiManager;
+    UI* gameUI;
+    UI* deathScreenUI;
     Player *player;
     SDL_Rect camera, floor;
 
     EnemyManager* enemyManager;
     RenderManager* renderManager;
     // CollisionManager* collisionManager;
-    
-
-    
 
     void handleRendering();
     void handleInput();

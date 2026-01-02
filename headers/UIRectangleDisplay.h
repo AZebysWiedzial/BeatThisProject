@@ -1,3 +1,6 @@
+#ifndef UI_RECTANGLE_DISPLAY_H
+#define UI_RECTANGLE_DISPLAY_H
+
 #include "UIRectangle.h"
 #include <stdio.h>
 
@@ -26,4 +29,4 @@ class UIRectangleDisplay : public UIRectangle
     int initialWidth;
 };
 
-
+#endif

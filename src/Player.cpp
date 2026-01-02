@@ -34,34 +34,41 @@ void Player::move(double deltaTime)
 
     // printf("Player position: x - %f y - %f\n", x, y);
 }
-void Player::handleInput(SDL_Event& event)
+void Player::handleInput(SDL_Event* event)
 {
-    switch(event.type) {
+    switch(event->type) {
         case SDL_KEYDOWN:
-            if(event.key.keysym.sym == KEY_RIGHT) 
+        {
+            SDL_Keycode keyPressed = event->key.keysym.sym;
+            if(keyPressed == KEY_RIGHT) 
             {
                 dirX = 1;
                 facingDirection = RIGHT;
             }
-            else if(event.key.keysym.sym == KEY_LEFT) 
+            else if(keyPressed == KEY_LEFT) 
             {
                 dirX = -1;
                 facingDirection = LEFT;
             }
-            else if(event.key.keysym.sym == KEY_DOWN) dirY = 1;
-            else if(event.key.keysym.sym == KEY_UP) dirY = -1;
-            else if(!isAttacking && event.key.keysym.sym == KEY_LIGHT_ATTACK) startAttacking(lightAttack);
-            else if(!isAttacking && event.key.keysym.sym == KEY_HEAVY_ATTACK) startAttacking(heavyAttack);
-            else if(event.key.keysym.sym == 'p') dealDamage(10);
-            break;
-
-        case SDL_KEYUP:
-            if(dirX == 1 && event.key.keysym.sym == KEY_RIGHT) dirX = 0;
-            else if(dirX == -1 && event.key.keysym.sym == KEY_LEFT) dirX = 0;
-            else if(dirY == 1 && event.key.keysym.sym == KEY_DOWN) dirY = 0;
-            else if(dirY == -1 && event.key.keysym.sym == KEY_UP) dirY = 0;
+            else if(keyPressed == KEY_DOWN) dirY = 1;
+            else if(keyPressed == KEY_UP) dirY = -1;
+            else if(!isAttacking && keyPressed == KEY_LIGHT_ATTACK) startAttacking(lightAttack);
+            else if(!isAttacking && keyPressed == KEY_HEAVY_ATTACK) startAttacking(heavyAttack);
+            else if(keyPressed == 'd') dealDamage(10);
             break;
         }
+
+        case SDL_KEYUP:
+        {
+            SDL_Keycode keyUnPressed = event->key.keysym.sym;
+            if(dirX == 1 && keyUnPressed == KEY_RIGHT) dirX = 0;
+            else if(dirX == -1 && keyUnPressed == KEY_LEFT) dirX = 0;
+            else if(dirY == 1 && keyUnPressed == KEY_DOWN) dirY = 0;
+            else if(dirY == -1 && keyUnPressed == KEY_UP) dirY = 0;
+            
+            break;
+        }
+    }
 }
 
 void Player::startAttacking(Attack* attack)
