@@ -2,11 +2,14 @@
 #define GAME_H
 
 #include <SDL.h>
-#include "Player.h"
-#include "UI.h"
+// #include "Player.h"
+// #include "UI.h"
 #include "LinkedList.h"
-#include "EnemyManager.h"
+// #include "EnemyManager.h"
 #include "RenderManager.h"
+#include "Scenes/Scene.h"
+#include "Scenes/LevelScene.h"
+#include "Scenes/MainMenuScene.h"
 // #include "CollisionManager.h"
 
 
@@ -30,39 +33,24 @@ class Game {
 
     private:
     int t1, t2, frames, rc;
-    int currPoints, currCombo;
-    int comboDurationMs;
     bool quit;
-	double deltaTimeMs, deltaTimeS, worldTime, fpsTimer, fps, updatesTimer, pauseTimer;
-    char textBuffer[128];
+	double deltaTimeMs, deltaTimeS;
     GameState gameState;
 	SDL_Event event;
-	SDL_Surface *screen, *charset;
+	SDL_Surface *screen;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-    WorldRenderable *background;
-    UI* gameUI;
-    UI* deathScreenUI;
-    UI* victoryScreenUI;
-    UI* mainMenuUI;
-    UI* rankingUI;
-
-    Player *player;
-    SDL_Rect camera, floor;
-
-    EnemyManager* enemyManager;
+    
     RenderManager* renderManager;
     // CollisionManager* collisionManager;
+    
+    Scene* currScene;
+    LevelScene* level;
+    MainMenuScene* mainMenu;
 
-    void setupUI();
     int setupSDL();
     void handleRendering();
-    void handleInput();
-    void fixedUpdate();
-    void gameUpdate();
-    void reset();
-    void handlePoints();
-    void deactivateUI();
-    void adjustCamera();
+    void handleEvents();
+    void adjustScene();
 };
 #endif

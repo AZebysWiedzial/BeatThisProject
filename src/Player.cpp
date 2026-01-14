@@ -18,6 +18,8 @@ Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int
 void Player::move(double deltaTime)
 {
     GameEntity::move(deltaTime);
+
+    
     
     double dx = dirX;
     double dy = dirY;

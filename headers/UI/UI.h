@@ -1,0 +1,29 @@
+#ifndef UI_H
+#define UI_H
+#include<SDL.h>
+#include "LinkedList.h"
+#include "UIElement.h"
+
+
+class UI
+{
+    public:
+    UI(SDL_Renderer* renderer, bool isActive);
+    // void initUI();
+    void render();
+    void add(UIElement* element);
+    void update();
+    void handleInput(SDL_Event* event);
+    void setActive(bool active);
+    void setVisible(bool visible);
+    bool getIsActive();
+    bool getIsVisible();
+
+    private:
+    bool isActive;
+    bool isVisible;
+    
+    SDL_Renderer* renderer;
+    LinkedList<UIElement*> uiElements;
+};
+#endif

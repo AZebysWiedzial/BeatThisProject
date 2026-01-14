@@ -5,7 +5,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "WorldRenderable.h"
-#include "UI.h"
+#include "UI/UI.h"
 
 class RenderManager
 {

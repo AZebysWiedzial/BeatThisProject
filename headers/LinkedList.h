@@ -64,15 +64,6 @@ void LinkedList<T>::add(T val)
     tail = newNode;
 }
 
-// template <typename T>
-// void LinkedList<T>::addAll(const std::initializer_list<T>& list)
-// {
-//     for(const auto& item : list)
-//     {
-//         add(item);
-//     }
-// }
-
 template <typename T>
 void LinkedList<T>::removeAfter(Node* prev)
 {

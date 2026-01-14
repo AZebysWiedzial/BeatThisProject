@@ -7,6 +7,8 @@
             "args": [
                 "-g",
                 "${workspaceFolder}/src/*.cpp",
+                "${workspaceFolder}/src/Scenes/*.cpp",
+                "${workspaceFolder}/src/UI/*.cpp",
                 "-I${workspaceFolder}/headers",
                 "-I${workspaceFolder}/SDL2-2.0.10/include",
                 "-L${workspaceFolder}/SDL2-2.0.10/lib",
