@@ -1,0 +1,59 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+//Game
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+
+#define DESIRED_FPS 60.0
+#define FRAME_DELAY 1000.0 / DESIRED_FPS
+
+#define FIXED_DELTA_TIME_MS 1000.0 / 60.0
+#define FIXED_DELTA_TIME_S FIXED_DELTA_TIME_MS * 0.001
+
+#define BACKGROUND_SPRITE_WIDTH 1280
+
+#define FLOOR_HEIGHT 80
+
+#define PLAYER_X_TO_MOVE_CAMERA 150
+
+#define PLAYER_START_X 50
+#define PLAYER_START_Y SCREEN_HEIGHT-20
+
+#define RESULT_SUCCESS 0
+#define RESULT_ERROR 1
+
+#define KEY_QUIT 27
+#define KEY_NEW_GAME 'n'
+#define KEY_PAUSE 'p'
+
+#define POINTS_FOR_HIT 10
+#define COMBO_DURATION_MS 2000
+
+#define RESULT_QUIT 0
+#define RESULT_NEW_GAME 1
+
+//GameEntity
+#define HITBOX_HEIGHT 15
+#define HITBOX_WIDTH 30
+
+//Player
+#define KEY_UP SDLK_UP
+#define KEY_DOWN SDLK_DOWN
+#define KEY_LEFT SDLK_LEFT
+#define KEY_RIGHT SDLK_RIGHT
+#define KEY_LIGHT_ATTACK 'z'
+#define KEY_HEAVY_ATTACK 'x'
+
+#define PLAYER_SPEED 400
+
+#define PLAYER_HP_BAR_LENGTH 100
+
+//UIText
+#define CHAR_BITMAP_SIZE 8
+
+#define TXTFIELD_TEXT_OFFSET 2
+
+#define BTN_TEXT_OFFSET 2
+
+#endif

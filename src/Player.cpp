@@ -2,7 +2,7 @@
 #include "mathFuncs.h"
 #include <stdio.h>
 
-
+#include "constants.h"
 
 
 Player::Player(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : GameEntity(renderer, camera, x, y, hp, spriteWidth, spriteHeight, objectWidth, objectHeight)

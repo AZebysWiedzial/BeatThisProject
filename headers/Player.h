@@ -4,15 +4,7 @@
 #include "Attack.h"
 #include "EnemyManager.h"
 
-#define KEY_UP SDLK_UP
-#define KEY_DOWN SDLK_DOWN
-#define KEY_LEFT SDLK_LEFT
-#define KEY_RIGHT SDLK_RIGHT
-#define KEY_LIGHT_ATTACK 'z'
-#define KEY_HEAVY_ATTACK 'x'
 
-
-#define PLAYER_SPEED 400
 
 class Player : public GameEntity
 {

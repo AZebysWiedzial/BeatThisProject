@@ -1,6 +1,8 @@
 #include "GameEntity.h"
 #include <stdio.h>
 
+#include "constants.h"
+
 GameEntity::GameEntity(SDL_Renderer* renderer, SDL_Rect* camera, double x, double y, int hp, int spriteWidth, int spriteHeight, int objectWidth, int objectHeight) : WorldRenderable(renderer, camera, x, y, spriteWidth, spriteHeight, objectWidth, objectHeight)
 {
     dirX = 0;
@@ -52,6 +54,10 @@ void GameEntity::dealDamage(int damage)
     currHp -= damage;
     if(currHp < 0) currHp = 0;
     // printf("Entity took %d damage; current HP: %d\n", damage, currHp);
+}
+void GameEntity::resetCurrHp()
+{
+    currHp = maxHp;
 }
 bool GameEntity::isDead()
 {

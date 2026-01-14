@@ -10,18 +10,21 @@
 class RenderManager
 {
     public:
-    RenderManager(SDL_Renderer* renderer, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background, UI* gameUI, UI* deathScreenUI);
+    RenderManager(SDL_Renderer* renderer, LinkedList<Enemy*>* enemies, Player* player, WorldRenderable* background);
     void renderGameEntities();
     void renderUI();
     void renderEverything();
+    void addUILayer(UI* layer);
     
     private:
     SDL_Renderer* renderer;
     LinkedList<Enemy*>* enemies;
     Player* player;
     WorldRenderable* background;
-    UI* gameUI;
-    UI* deathScreenUI;
+    LinkedList<UI*> UILayers;
+    // UI* gameUI;
+    // UI* deathScreenUI;
+    // UI* victoryScreenUI;
 };
 
 #endif

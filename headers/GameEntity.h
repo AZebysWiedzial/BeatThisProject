@@ -4,8 +4,7 @@
 #include <SDL.h>
 #include "WorldRenderable.h"
 
-#define HITBOX_HEIGHT 15
-#define HITBOX_WIDTH 30
+
 
 enum Direction
 {
@@ -23,6 +22,7 @@ class GameEntity : public WorldRenderable
     virtual void dealDamage(int damage);
     void undoMoveX();
     void undoMoveY();
+    void resetCurrHp();
     bool isDead();
     int getCurrHp();
     int getMaxHp();

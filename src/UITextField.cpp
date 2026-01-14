@@ -2,17 +2,19 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "constants.h"
+
 UITextField::UITextField(SDL_Renderer* renderer, double x, double y, int width, int height) : UIElement(renderer, x, y, width, height)
 {
     isEditable = true;
     mouseX = mouseY = 0;
     length = 0;
-    capacity = 60;
+    capacity = width / (height - (TXTFIELD_TEXT_OFFSET * 2));
     textBuffer = new char[capacity];
     textBuffer[0] = '\0';
 
     backgroundComponent = new UIRectangle(renderer, x, y, width, height, 255, 255, 255);
-    textComponent = new UIText(renderer, x + 2, y + 2, width - 4, height - 4, "");
+    textComponent = new UIText(renderer, x + TXTFIELD_TEXT_OFFSET, y + TXTFIELD_TEXT_OFFSET, width - (TXTFIELD_TEXT_OFFSET * 2), height - (TXTFIELD_TEXT_OFFSET * 2), "");
     textComponent->setColor(0, 0, 0);
 }
 
@@ -20,12 +22,17 @@ void UITextField::update()
 {
     printf("Text field active: %d; Text: %s\n", isEditable, textBuffer);
     // printf("Kanapka\n");
-    textComponent->setText(textBuffer);
+    // printf("%s\n", textComponent->getText());
 }
 void UITextField::render()
 {
     backgroundComponent->render();
     textComponent->render();
+}
+
+const char* UITextField::getText()
+{
+    return textBuffer;
 }
 
 void UITextField::handleInput(SDL_Event* event)
@@ -48,6 +55,7 @@ void UITextField::handleInput(SDL_Event* event)
     {
         const char* input = event->text.text;
         appendText(input);
+        textComponent->setText(textBuffer);
         break;
     }
     case SDL_KEYDOWN:

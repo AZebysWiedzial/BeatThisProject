@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<string.h>
 
+#include "constants.h"
 #include "Game.h"
 
 // main
@@ -19,7 +20,7 @@ int main(int argc, char **argv)
 		printf("FAILED\n");
 	}
 
-	loopResult = game.gameLoop();
+	loopResult = game.mainLoop();
 	printf("%d\n", loopResult);
 
 	game.cleanUp();

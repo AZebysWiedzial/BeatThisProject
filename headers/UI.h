@@ -4,7 +4,6 @@
 #include "LinkedList.h"
 #include "UIElement.h"
 
-#define PLAYER_HP_BAR_LENGTH 100
 
 class UI
 {

@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "constants.h"
+
 UIText::UIText(SDL_Renderer* renderer, double x, double y, int width, int height, const char* text) : UIElement(renderer, x, y, width, height)
 {
     charset = SDL_LoadBMP("../assets/cs8x8.bmp");

@@ -13,6 +13,8 @@ class UITextField : public UIElement
     UITextField(SDL_Renderer* renderer, double x, double y, int width, int height);
     void update() override;
     void render() override;
+    void handleInput(SDL_Event* event) override;
+    const char* getText();
 
     private:
     UIText* textComponent;
@@ -25,8 +27,6 @@ class UITextField : public UIElement
 
     bool isShiftPressed, isCapsLockOn;
 
-
-    void handleInput(SDL_Event* event);
     void appendText(const char* textToAppend);
     void backspace();
     

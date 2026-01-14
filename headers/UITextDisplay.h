@@ -6,11 +6,13 @@ class UITextDisplay : public UIText
 {
     public:
     UITextDisplay(SDL_Renderer* renderer, double x, double y, int width, int height, const char* prefix, double* displayValuePtr);
+    UITextDisplay(SDL_Renderer* renderer, double x, double y, int width, int height, const char* prefix, int* displayValuePtr);
     void update() override;
     
 
     private:
-    double* displayValuePtr;
+    double* displayValueDoublePtr;
+    int* displayValueIntPtr;
     const char* prefix;
 
 };

@@ -9,6 +9,7 @@ class EnemyManager
 {
     public:
     EnemyManager(SDL_Renderer* renderer, SDL_Rect* camera);
+    bool isEnemiesListEmpty();
     void spawnEnemy(int x, int y);
     void handleEnemiesMovement(double deltaTime);
     void handleEnemiesCollisions();

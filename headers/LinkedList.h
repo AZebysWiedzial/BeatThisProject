@@ -25,8 +25,9 @@ template <typename T> class LinkedList
     ~LinkedList();
     void add(T val);
     // template <typename... Args>
-    // void addAll(Args&... vals);
+    // void addAll(const std::initializer_list<T>& list);
     void removeAfter(Node* node);
+    bool isEmpty();
     void clear();
     template <typename Function>
     void forEach(Function func);
@@ -64,10 +65,12 @@ void LinkedList<T>::add(T val)
 }
 
 // template <typename T>
-// template <typename... Args>
-// void LinkedList<T>::addAll(Args&... vals)
+// void LinkedList<T>::addAll(const std::initializer_list<T>& list)
 // {
-    
+//     for(const auto& item : list)
+//     {
+//         add(item);
+//     }
 // }
 
 template <typename T>
@@ -79,11 +82,17 @@ void LinkedList<T>::removeAfter(Node* prev)
     if(nodeToRemove == tail) tail = prev;
     delete nodeToRemove;
 }
+template <typename T>
+bool LinkedList<T>::isEmpty()
+{
+    return (head->next == nullptr);
+}
+
 
 template <typename T>
 void LinkedList<T>::clear()
 {
-    while(head->next != nullptr)
+    while(!isEmpty())
     {
         removeAfter(head);
     }

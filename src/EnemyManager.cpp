@@ -6,7 +6,10 @@ EnemyManager::EnemyManager(SDL_Renderer* renderer, SDL_Rect* camera)
     this->renderer = renderer;
     this->camera = camera;
 }
-
+bool EnemyManager::isEnemiesListEmpty()
+{
+    return enemies.isEmpty();
+}
 void EnemyManager::spawnEnemy(int x, int y)
 {
     Enemy* newEnemy = new Enemy(renderer, camera, x, y, 100, 30, 30, 30, 30);
