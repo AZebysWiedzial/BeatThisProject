@@ -10,7 +10,10 @@
 
 #include "filesFuncs.h"
 
-LevelScene::LevelScene(SDL_Renderer* renderer) : Scene(renderer)
+#include <string.h>
+#include<unistd.h>
+
+LevelScene::LevelScene(SDL_Renderer* renderer, SDL_Surface* charset) : Scene(renderer, charset)
 {
     frames = 0;
     fpsTimer = 0;
@@ -37,6 +40,10 @@ void LevelScene::init()
     player = new Player(renderer, &camera, PLAYER_START_X, PLAYER_START_Y, 100, 30, 30, 30, 30);
 
     background = new WorldRenderable(renderer, &camera, 0.0, 0.0, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT, BACKGROUND_SPRITE_WIDTH, SCREEN_HEIGHT);
+
+    char buffer[1024];
+    // if(getcwd(buffer, sizeof(buffer)) != NULL)
+    //     printf("Curr dir: %s\n", buffer);
     if(background->setSprite("../assets/background.bmp") == 1)
     {
         printf("SDL_LoadBMP(background.bmp) error: %s\n", SDL_GetError());
@@ -56,25 +63,27 @@ void LevelScene::update(double deltaTimeMs)
     switch (gameState)
     {
     case GAME_WON:
-        printf("GAME_WON\n");
+        // printf("GAME_WON\n");
         gameUI->setActive(false);
         victoryScreenUI->setActive(true);
+        victoryScreenUI->update();
         break;
 
     case GAME_LOST:
-        printf("GAME_LOST\n");
+        // printf("GAME_LOST\n");
         gameUI->setActive(false);
         deathScreenUI->setActive(true);
+        deathScreenUI->update();
         break;
 
     case PAUSED:
-        printf("PAUSED\n");
+        // printf("PAUSED\n");
         gameUI->setActive(false);
         //pauseUI->setActive(true);
         break;
 
     case IN_GAME:
-        printf("IN_GAME\n");
+        // printf("IN_GAME\n");
         gameUI->setActive(true);
         deathScreenUI->setVisible(false);
         victoryScreenUI->setVisible(false);
@@ -195,9 +204,9 @@ void LevelScene::setupUI()
 {
     UIRectangle* uiBackground = new UIRectangle(renderer, 0, 0, 640, 50, 100, 100, 100);
     UIRectangleDisplay* playerHpBar = new UIRectangleDisplay(renderer, 10, 10, PLAYER_HP_BAR_LENGTH, 20, 255, 0, 0, player->getHp());
-    UITextDisplay* txtTime = new UITextDisplay(renderer, 300, 10, 100, 12, "Time: ", &worldTime);
-    UITextDisplay* txtScore = new UITextDisplay(renderer, 150, 10, 100, 12, "Score: ", &currPoints);
-    UITextDisplay* txtFPS = new UITextDisplay(renderer, 500, 10, 100, 12, "FPS: ", &fps);
+    UITextDisplay* txtTime = new UITextDisplay(renderer, charset, 300, 10, 100, 12, "Time: ", &worldTime);
+    UITextDisplay* txtScore = new UITextDisplay(renderer, charset, 150, 10, 100, 12, "Score: ", &currPoints);
+    UITextDisplay* txtFPS = new UITextDisplay(renderer, charset, 500, 10, 100, 12, "FPS: ", &fps);
 
     gameUI->add(uiBackground);
     gameUI->add(playerHpBar);
@@ -207,10 +216,10 @@ void LevelScene::setupUI()
 
     UIRectangle* staticBackground = new UIRectangle(renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 100, 100, 100);
     // gameOverScreenBackground->setOpacity(150);
-    UIText* txtGameOver = new UIText(renderer, 150, 200, 100, 50, "GAME OVER!");
-    UIButton* btnRestart = new UIButton(renderer, 150, 300, 200, 30, "Restart");
+    UIText* txtGameOver = new UIText(renderer, charset, 150, 200, 100, 50, "GAME OVER!");
+    UIButton* btnRestart = new UIButton(renderer, charset, 150, 300, 200, 30, "Restart");
     btnRestart->setOnClick([&]{reset();});
-    UIButton* btnMenu = new UIButton(renderer, 400, 300, 200, 30, "Menu");
+    UIButton* btnMenu = new UIButton(renderer, charset, 400, 400, 200, 30, "Menu");
     btnMenu->setOnClick([&]{sceneToSwitch = MAIN_MENU;});
 
     deathScreenUI->add(staticBackground);
@@ -218,15 +227,19 @@ void LevelScene::setupUI()
     deathScreenUI->add(btnRestart);
     deathScreenUI->add(btnMenu);
 
-    UIText* txtYouWin = new UIText(renderer, 200, 200, 100, 50, "YOU WIN!");
-    UITextField* txtFieldName = new UITextField(renderer, SCREEN_WIDTH/2 - 150, 300, 300, 26);
-    UIButton* btnSaveScore = new UIButton(renderer, 200, 300, 150, 30, "SAVE SCORE");
-    btnSaveScore->setOnClick([&]{
-        printf("%s\n", txtFieldName->getText());
-        Score newScore = {txtFieldName->getText(), currPoints};
-        addScore(&newScore);
-        // printf("Name: %s; Score: %d\n", newScore.nickname, newScore.score);
+    UIText* txtYouWin = new UIText(renderer, charset, 200, 200, 100, 50, "YOU WIN!");
+    UITextField* txtFieldName = new UITextField(renderer, charset, SCREEN_WIDTH/2 - 150, 300, 300, 26);
+    UIButton* btnSaveScore = new UIButton(renderer, charset, 75, 400, 275, 30, "SAVE SCORE");
+    btnSaveScore->setOnClick([txtFieldName, this]{
+        char* nickname = txtFieldName->getText();
+        
+        Score* newScore = new Score();
+        strcpy(newScore->nickname, nickname);
+        newScore->score = currPoints;
 
+        addScore(newScore);
+        delete newScore;
+        
         sceneToSwitch = MAIN_MENU;
     });
 

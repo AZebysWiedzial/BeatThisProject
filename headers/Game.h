@@ -37,7 +37,7 @@ class Game {
 	double deltaTimeMs, deltaTimeS;
     GameState gameState;
 	SDL_Event event;
-	SDL_Surface *screen;
+	SDL_Surface *screen, *charset;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
     

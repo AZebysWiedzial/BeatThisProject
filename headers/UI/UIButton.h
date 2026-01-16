@@ -9,7 +9,7 @@
 class UIButton : public UIElement
 {
     public:
-    UIButton(SDL_Renderer* renderer, double x, double y, int width, int height, const char* text);
+    UIButton(SDL_Renderer* renderer, SDL_Surface* charset, double x, double y, int width, int height, const char* text);
     void update() override;
     void render() override;
     void handleInput(SDL_Event* event) override;

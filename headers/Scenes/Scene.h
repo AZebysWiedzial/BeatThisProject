@@ -13,7 +13,7 @@ class Scene
         QUIT,
     };
 
-    Scene(SDL_Renderer* renderer);
+    Scene(SDL_Renderer* renderer, SDL_Surface* charset);
     virtual void init() = 0;
     virtual void update(double deltaTimeMs) = 0;
     virtual void render() = 0;
@@ -26,6 +26,8 @@ class Scene
     protected:
     SDL_Renderer* renderer;
     SceneToSwitch sceneToSwitch;
+
+    SDL_Surface* charset;
 
     virtual void setupUI() = 0;
 };

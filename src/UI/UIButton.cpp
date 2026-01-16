@@ -3,11 +3,11 @@
 
 #include "constants.h"
 
-UIButton::UIButton(SDL_Renderer* renderer, double x, double y, int width, int height, const char* text) : UIElement(renderer, x, y, width, height)
+UIButton::UIButton(SDL_Renderer* renderer, SDL_Surface* charset, double x, double y, int width, int height, const char* text) : UIElement(renderer, x, y, width, height)
 {
     backgroundComponent = new UIRectangle(renderer, x, y, width, height, 255, 255, 255);
     backgroundComponent->setColor(0, 255, 0);
-    textComponent = new UIText(renderer, x + (width / 2), y + (height / 2), width - (BTN_TEXT_OFFSET * 2), height - (BTN_TEXT_OFFSET * 2), text);
+    textComponent = new UIText(renderer, charset, x + (width / 2), y + (height / 2), width - (BTN_TEXT_OFFSET * 2), height - (BTN_TEXT_OFFSET * 2), text);
     textComponent->setAnchor(CENTER);
 
     isClicked = false;

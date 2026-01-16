@@ -16,7 +16,7 @@ class LevelScene : public Scene
         GAME_LOST,
     };
     public:
-    LevelScene(SDL_Renderer* renderer);
+    LevelScene(SDL_Renderer* renderer, SDL_Surface* charset);
     void init() override;
     void update(double deltaTimeMs) override;
     void render() override;

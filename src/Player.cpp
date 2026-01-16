@@ -120,7 +120,7 @@ void Player::handleAttacking(double deltaTime)
     int attack = 0;
     if(currAttack == lightAttack) attack = 1;
     else if(currAttack == heavyAttack) attack = 2;
-    printf("Attack timer - %f; current attack: %d\n", attackTimer, attack);
+    // printf("Attack timer - %f; current attack: %d\n", attackTimer, attack);
 }
 
 bool Player::getWantsToAttack()

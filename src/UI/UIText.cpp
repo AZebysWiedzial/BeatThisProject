@@ -1,20 +1,13 @@
 #include "UI/UIText.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "constants.h"
 
-UIText::UIText(SDL_Renderer* renderer, double x, double y, int width, int height, const char* text) : UIElement(renderer, x, y, width, height)
+UIText::UIText(SDL_Renderer* renderer, SDL_Surface* charset, double x, double y, int width, int height, const char* text) : UIElement(renderer, x, y, width, height)
 {
-    charset = SDL_LoadBMP("../assets/cs8x8.bmp");
-    if(charset == nullptr)
-    {
-        printf("Failed to load charset bitmap: %s\n", SDL_GetError());
-    }
-    else
-    {
-        SDL_SetColorKey(charset, true, SDL_MapRGB(charset->format, 0, 0, 0));
-    }
+    this->charset = charset;
     this->text = nullptr;
     setText(text);
 }
@@ -25,7 +18,6 @@ void UIText::setText(const char* newText)
 
     if(text != nullptr) delete[] text;
     text = new char[newTextLength + 1];
-    text[newTextLength] = '\0';
     strcpy(text, newText);
 
     DrawText();

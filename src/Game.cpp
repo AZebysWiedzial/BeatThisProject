@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<SDL.h>
+#include<unistd.h>
 
 #include "constants.h"
 
@@ -21,8 +22,8 @@ int Game::init()
 
     gameState = MAIN_MENU;
 
-    level = new LevelScene(renderer);
-    mainMenu = new MainMenuScene(renderer);
+    level = new LevelScene(renderer, charset);
+    mainMenu = new MainMenuScene(renderer, charset);
     currScene = mainMenu;
 
     level->init();
@@ -52,6 +53,19 @@ int Game::setupSDL()
     SDL_SetWindowTitle(window, "Beat This Project");
 
     SDL_ShowCursor(SDL_DISABLE);
+
+    charset = SDL_LoadBMP("../assets/cs8x8.bmp");
+    // char buffer[1024];
+    // if(getcwd(buffer, sizeof(buffer)) != NULL)
+    //     printf("Curr dir: %s\n", buffer);
+    if(charset == nullptr)
+    {
+        printf("Failed to load charset bitmap: %s\n", SDL_GetError());
+    }
+    else
+    {
+        SDL_SetColorKey(charset, true, SDL_MapRGB(charset->format, 0, 0, 0));
+    }
     return RESULT_SUCCESS;
 }
 

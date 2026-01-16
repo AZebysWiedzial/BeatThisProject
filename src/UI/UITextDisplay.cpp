@@ -1,13 +1,13 @@
 #include "UI/UITextDisplay.h"
 #include <stdio.h>
 
-UITextDisplay::UITextDisplay(SDL_Renderer* renderer, double x, double y, int width, int height, const char* prefix, double* displayValuePtr) : UIText(renderer, x, y, width, height, prefix)
+UITextDisplay::UITextDisplay(SDL_Renderer* renderer, SDL_Surface* charset, double x, double y, int width, int height, const char* prefix, double* displayValuePtr) : UIText(renderer, charset, x, y, width, height, prefix)
 {
     this->displayValueDoublePtr = displayValuePtr;
     this->displayValueIntPtr = nullptr;
     this->prefix = prefix;
 }
-UITextDisplay::UITextDisplay(SDL_Renderer* renderer, double x, double y, int width, int height, const char* prefix, int* displayValuePtr) : UIText(renderer, x, y, width, height, prefix)
+UITextDisplay::UITextDisplay(SDL_Renderer* renderer, SDL_Surface* charset, double x, double y, int width, int height, const char* prefix, int* displayValuePtr) : UIText(renderer, charset, x, y, width, height, prefix)
 {
     this->displayValueIntPtr = displayValuePtr;
     this->displayValueDoublePtr = nullptr;

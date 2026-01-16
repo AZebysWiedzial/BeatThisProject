@@ -10,11 +10,11 @@
 class UITextField : public UIElement
 {
     public:
-    UITextField(SDL_Renderer* renderer, double x, double y, int width, int height);
+    UITextField(SDL_Renderer* renderer, SDL_Surface* charset,  double x, double y, int width, int height);
     void update() override;
     void render() override;
     void handleInput(SDL_Event* event) override;
-    const char* getText();
+    char* getText();
 
     private:
     UIText* textComponent;
@@ -25,7 +25,7 @@ class UITextField : public UIElement
     bool isEditable;
     int mouseX, mouseY;
 
-    bool isShiftPressed, isCapsLockOn;
+    // bool isShiftPressed, isCapsLockOn;
 
     void appendText(const char* textToAppend);
     void backspace();

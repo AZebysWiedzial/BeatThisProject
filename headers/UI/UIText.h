@@ -8,7 +8,7 @@
 class UIText : public UIElement
 {
     public:
-    UIText(SDL_Renderer* renderer, double x, double y, int width, int height, const char* text);
+    UIText(SDL_Renderer* renderer, SDL_Surface* charset, double x, double y, int width, int height, const char* text);
     virtual void setText(const char* newText);
 
     protected:

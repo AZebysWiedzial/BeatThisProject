@@ -56,4 +56,6 @@
 
 #define BTN_TEXT_OFFSET 2
 
+#define SCORES_PER_PAGE 3
+
 #endif
